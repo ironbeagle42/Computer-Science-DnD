@@ -4,12 +4,11 @@ public class GoldenSaverTester {
         Dog dog1 = new Dog("name", "Golden Retriever");
         Dog dog2 = new Dog("name", "Pug");
         ArrayList<Dog> list = new ArrayList<Dog>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 100000000; i++) {
             list.add(dog1);
             list.add(dog2);
         }
-        System.out.println(list);
         GoldenSaver.rescueGoldens(list);
-        System.out.println(list);
+
     }
 }
