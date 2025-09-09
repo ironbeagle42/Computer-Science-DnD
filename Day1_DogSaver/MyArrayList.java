@@ -6,6 +6,7 @@
 /*
  * Your indexed functions should throw IndexOutOfBoundsException if index is invalid!
  */
+import java.lang.StringBuilder;
 
 public class MyArrayList<E> {
 
@@ -108,6 +109,7 @@ public class MyArrayList<E> {
 	}
 
 	/* Add an object to the end of the list; returns true */
+	//O(n)
 	@SuppressWarnings("unchecked")
 	public boolean add(E obj) {
 		// if (objectCount == internalArray.length) {
@@ -160,14 +162,16 @@ public class MyArrayList<E> {
 	 * element, "[X]", etc. Elements are separated by a comma and a space.
 	 */
 	public String toString() {
-		String temp = "[";
-		for (int i = 0; i < objectCount - 1; i++) {
-			temp += internalArray[i] + ", ";
-		}
-		if (objectCount != 0) {
-			temp += internalArray[objectCount - 1];
-		}
-		return temp + "]";
+	StringBuilder str = new StringBuilder("[");
+	for (int i = 0; i < objectCount - 1; i++) {
+		str.append(i);
+		str.append(", ");
+	}
+	if (objectCount != 0) {
+		str.append(internalArray[objectCount - 1]);
+	}
+	str.append("]");
+	return str.toString();
 	}
 
 }
