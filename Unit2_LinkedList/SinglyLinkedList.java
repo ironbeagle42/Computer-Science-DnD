@@ -35,7 +35,7 @@ public class SinglyLinkedList<E> {
 
 	// Returns true if this list is empty; otherwise returns false.
 	public boolean isEmpty() {
-		return nodeCount == 0;
+		return (nodeCount == 0);
 	}
 
 	// Returns the number of elements in this list.
@@ -72,20 +72,31 @@ public class SinglyLinkedList<E> {
 	// Adds obj to this collection.  Returns true if successful;
 	// otherwise returns false.
 	public boolean add(E obj) {
-		ListNode temp = tail;
-		tail = new ListNode(obj);
-		temp.setNext(tail);
+		ListNode temp = new ListNode<E>(obj);
 		nodeCount++;
+		if (head == null) {
+			head = temp;
+			tail = head;
+			return true;
+		}
+		tail.setNext(temp);
+		tail = tail.getNext();
 		return true;
 	}
 
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
 	public boolean remove(E obj) {
+		if (head.getValue().equals(obj)) {
+			head = head.getNext();
+			nodeCount--;
+			return true;
+		}
 		ListNode temp = head;
-		for (int i = 0; i < nodeCount; i++) {
-			if (temp.getValue().equals(obj)) {
-				remove(i);
+		for (int i = 1; i <= nodeCount; i++) {
+			if (temp.getNext().getValue() == obj) {
+				temp.setNext(temp.getNext().getNext());
+				nodeCount--;
 				return true;
 			}
 			temp = temp.getNext();
@@ -95,8 +106,11 @@ public class SinglyLinkedList<E> {
 
 	// Returns the i-th element.               
 	public E get(int i) {
+		if (i >= nodeCount || i < 0) {
+			throw new IndexOutOfBoundsException();
+		}
 		ListNode temp = head;
-		for (int j = 1; j < i; j++) {
+		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
 		}
 		return (E)temp.getValue();
@@ -105,7 +119,7 @@ public class SinglyLinkedList<E> {
 	// Replaces the i-th element with obj and returns the old value.
 	public E set(int i, Object obj) {
 		ListNode temp = head;
-		for (int j = 1; j < i; j++) {
+		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
 		}
 		E ret = (E)temp.getValue();
@@ -117,7 +131,7 @@ public class SinglyLinkedList<E> {
 	// of the list by one.
 	public void add(int i, Object obj) {
 		ListNode temp = head;
-		for (int j = 1; j < i - 1; j++) {
+		for (int j = 0; j < i - 1; j++) {
 			temp = temp.getNext();
 		}
 		ListNode temp2 = new ListNode(obj, temp.getNext());
@@ -128,8 +142,14 @@ public class SinglyLinkedList<E> {
 	// Removes the i-th element and returns its value.
 	// Decrements the size of the list by one.
 	public E remove(int i) {
+		if (i == 0) {
+			E ret = head.getValue();
+			head = head.getNext();
+			nodeCount--;
+			return ret;
+		}
 		ListNode temp = head;
-		for (int j = 2; j <= i - 1; j++) {
+		for (int j = 0; j < i - 1; j++) {
 			temp = temp.getNext();
 		}
 		E ret = (E)temp.getNext().getValue();
@@ -142,12 +162,14 @@ public class SinglyLinkedList<E> {
 	public String toString() {
 		StringBuilder str = new StringBuilder("[");
 		ListNode temp = head;
-		while (temp != tail) {
+		while (temp != tail && temp != null) {
 			str.append(temp.getValue());
 			str.append(", ");
 			temp = temp.getNext();
 		}
-		str.append(tail.getValue());
+		if (head != null) {
+			str.append(tail.getValue());
+		}
 		str.append("]");
 		return str.toString();
 	}
