@@ -9,13 +9,7 @@ public class SinglyLinkedListTester {
         test.set(1, "A");
         System.out.println(test.get(3));
         System.out.println(test.toString());
-        System.out.println( test.remove(3));
-       ;
-  
-
-
-
+        System.out.println(test.remove(3));;
         System.out.println(test.toString());
-        System.out.println(test.isEmpty());
     }
 }

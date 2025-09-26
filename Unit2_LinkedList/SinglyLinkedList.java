@@ -24,11 +24,11 @@ public class SinglyLinkedList<E> {
 		this.head = new ListNode(values[0], temp);
 		this.nodeCount = values.length;
 	}
-	
+
 	public ListNode<E> getHead() {
 		return head;
 	}
-	
+
 	public ListNode<E> getTail() {
 		return tail;
 	}
@@ -69,7 +69,7 @@ public class SinglyLinkedList<E> {
 		return -1;
 	}
 
-	// Adds obj to this collection.  Returns true if successful;
+	// Adds obj to this collection. Returns true if successful;
 	// otherwise returns false.
 	public boolean add(E obj) {
 		ListNode temp = new ListNode<E>(obj);
@@ -104,7 +104,7 @@ public class SinglyLinkedList<E> {
 		return false;
 	}
 
-	// Returns the i-th element.               
+	// Returns the i-th element.
 	public E get(int i) {
 		if (i >= nodeCount || i < 0) {
 			throw new IndexOutOfBoundsException();
@@ -113,7 +113,7 @@ public class SinglyLinkedList<E> {
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
 		}
-		return (E)temp.getValue();
+		return (E) temp.getValue();
 	}
 
 	// Replaces the i-th element with obj and returns the old value.
@@ -122,7 +122,7 @@ public class SinglyLinkedList<E> {
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
 		}
-		E ret = (E)temp.getValue();
+		E ret = (E) temp.getValue();
 		temp.setValue(obj);
 		return ret;
 	}
@@ -142,6 +142,9 @@ public class SinglyLinkedList<E> {
 	// Removes the i-th element and returns its value.
 	// Decrements the size of the list by one.
 	public E remove(int i) {
+		if (i < 0 || i >= nodeCount) {
+			throw new IndexOutOfBoundsException();
+		}
 		if (i == 0) {
 			E ret = head.getValue();
 			head = head.getNext();
@@ -152,8 +155,12 @@ public class SinglyLinkedList<E> {
 		for (int j = 0; j < i - 1; j++) {
 			temp = temp.getNext();
 		}
-		E ret = (E)temp.getNext().getValue();
-		temp.setNext(temp.getNext().getNext());
+		E ret = (E) temp.getNext().getValue();
+		if (temp.getNext().equals(tail)) {
+			tail = temp;
+		} else {
+			temp.setNext(temp.getNext().getNext());
+		}
 		nodeCount--;
 		return ret;
 	}
@@ -173,6 +180,6 @@ public class SinglyLinkedList<E> {
 		str.append("]");
 		return str.toString();
 	}
-	
+
 
 }
