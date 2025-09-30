@@ -118,6 +118,9 @@ public class SinglyLinkedList<E> {
 
 	// Replaces the i-th element with obj and returns the old value.
 	public E set(int i, Object obj) {
+		if (i < 0 || i >= nodeCount) {
+			throw new IndexOutOfBoundsException();
+		}
 		ListNode temp = head;
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
@@ -130,6 +133,9 @@ public class SinglyLinkedList<E> {
 	// Inserts obj to become the i-th element. Increments the size
 	// of the list by one.
 	public void add(int i, Object obj) {
+		if (i < 0 || i >= nodeCount) {
+			throw new IndexOutOfBoundsException();
+		}
 		ListNode temp = head;
 		for (int j = 0; j < i - 1; j++) {
 			temp = temp.getNext();
