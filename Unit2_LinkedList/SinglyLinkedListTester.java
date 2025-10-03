@@ -7,9 +7,9 @@ public class SinglyLinkedListTester {
         System.out.println(test.remove("R"));
         System.out.println(test.toString());
         test.set(1, "A");
-        System.out.println(test.get(3));
+        test.set(0, "A");
         System.out.println(test.toString());
-        System.out.println(test.remove(3));;
-        System.out.println(test.toString());
+        test.set(-1, "A");
+
     }
 }

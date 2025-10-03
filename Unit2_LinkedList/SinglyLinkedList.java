@@ -16,6 +16,9 @@ public class SinglyLinkedList<E> {
 	// Constructor: creates a list that contains
 	// all elements from the array values, in the same order
 	public SinglyLinkedList(Object[] values) {
+		if (values.length == 0) {
+			return;
+		}
 		this.tail = new ListNode(values[values.length - 1]);
 		ListNode temp = tail;
 		for (int i = values.length - 2; i > 0; i--) {
@@ -46,10 +49,20 @@ public class SinglyLinkedList<E> {
 	// Returns true if this list contains an element equal to obj;
 	// otherwise returns false.
 	public boolean contains(E obj) {
+		boolean isNull = false;
+		if (obj == null) {
+			isNull = true;
+		}
 		ListNode temp = head;
 		for (int i = 0; i < nodeCount; i++) {
-			if (temp.getValue().equals(obj)) {
-				return true;
+			if (temp.getValue() == null) {
+				if (isNull) {
+					return true;
+				}
+			} else {
+				if (temp.getValue().equals(obj)) {
+					return true;
+				}
 			}
 			temp = temp.getNext();
 		}
