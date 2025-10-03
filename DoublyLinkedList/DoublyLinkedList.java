@@ -170,13 +170,14 @@ public class DoublyLinkedList {
 		return str.toString();
 	}
 
-	
+
 
 	// Like question 7 on the SinglyLinkedList test:
 	// Add a "segment" (another list) onto the end of this list
 	public void addSegmentToEnd(DoublyLinkedList seg) {
 		SENTINEL.getPrevious().setNext(seg.SENTINEL.getNext());
 		SENTINEL.setPrevious(seg.SENTINEL.getPrevious());
+		SENTINEL.getPrevious().setNext(SENTINEL);
 	}
 
 	// Like question 8 on the SinglyLinkedList test:
@@ -185,18 +186,72 @@ public class DoublyLinkedList {
 	// you do not need to assume or check for that)
 	public void removeCCCCCCCCGGGGGGGG(ListNode2<Nucleotide> nodeBefore) {
 		ListNode2<Nucleotide> temp = SENTINEL;
+		int num = 0;
 		while (!temp.equals(nodeBefore)) {
 			temp = temp.getNext();
+			num++;
+			if (num > nodeCount) {
+				return;
+			}
 		}
-		temp.setNext(temp.getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext().getNext());
-		temp.getNext().setPrevious(temp.getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious().getPrevious());
+		for (int i = 0; i < 16; i++) {
+			if (temp.getNext().equals(SENTINEL)) {
+				nodeCount -= i;
+				return;
+			}
+			temp = temp.getNext();
+		}
+		nodeCount -= 16;
 	}
 
 	// Like question 9 on the SinglyLinkedList test:
 	// You are to find and delete the first instance of seg in the list.
 	// If seg is not in the list, return false, otherwise return true.
 	public boolean deleteSegment(DoublyLinkedList seg) {
-
+		if (seg.nodeCount > nodeCount) {
+			return false;
+		}
+		ListNode2<Nucleotide> temp = SENTINEL;
+		ListNode2<Nucleotide> temp2 = SENTINEL;
+		int num = 0;
+		int num2 = 0;
+		int segNum = 0;
+		boolean isRemoved = false;
+		while (!isRemoved) {
+			ListNode2<Nucleotide> segTemp = SENTINEL.getNext();
+			num2 = num;
+			while (!temp.equals(segTemp)) {
+				temp = temp.getNext();
+				num2++;
+				if (num2 > nodeCount) {
+					return false;
+				}
+			}
+			num2 = num;
+			temp2 = temp;
+			for (int i = 1; i < seg.nodeCount; i++) {
+				if (temp2.getNext().equals(segTemp.getNext())) {
+					temp2 = temp2.getNext();
+					num2++;
+				} else {
+					break;
+				}
+			}
+			if (num2 >= nodeCount) {
+				return false;
+			}
+			if (temp2.equals(seg.SENTINEL.getPrevious())) {
+				temp = temp.getPrevious();
+				for (int i = 0; i < seg.nodeCount; i++) {
+					temp.setNext(temp.getNext().getNext());
+				}
+				isRemoved = true;
+			} else {
+				temp = temp.getNext();
+				num++;
+			}
+		}
+		return isRemoved;
 	}
 
 	// Like question 10 on the SinglyLinkedList test:

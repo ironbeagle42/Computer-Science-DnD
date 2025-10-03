@@ -72,10 +72,20 @@ public class SinglyLinkedList<E> {
 	// Returns the index of the first element in equal to obj;
 	// if not found, returns -1.
 	public int indexOf(E obj) {
+		boolean isNull = false;
+		if (obj == null) {
+			isNull = true;
+		}
 		ListNode temp = head;
 		for (int i = 0; i < nodeCount; i++) {
-			if (temp.getValue().equals(obj)) {
-				return i;
+			if (temp.getValue() == null) {
+				if (isNull) {
+					return i;
+				} else {
+					if (temp.getValue().equals(obj)) {
+						return i;
+					}
+				}
 			}
 			temp = temp.getNext();
 		}
@@ -100,17 +110,37 @@ public class SinglyLinkedList<E> {
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
 	public boolean remove(E obj) {
-		if (head.getValue().equals(obj)) {
-			head = head.getNext();
-			nodeCount--;
-			return true;
+		boolean isNull = false;
+		if (obj == null) {
+			isNull = true;
+		}
+		if (head.getValue() == null) {
+			if (isNull) {
+				head = head.getNext();
+				nodeCount--;
+				return true;
+			}
+		} else {
+			if (head.getValue().equals(obj)) {
+				head = head.getNext();
+				nodeCount--;
+				return true;
+			}
 		}
 		ListNode temp = head;
 		for (int i = 1; i <= nodeCount; i++) {
-			if (temp.getNext().getValue() == obj) {
-				temp.setNext(temp.getNext().getNext());
-				nodeCount--;
-				return true;
+			if (temp.getNext().getValue() == null) {
+				if (isNull) {
+					temp.setNext(temp.getNext().getNext());
+					nodeCount--;
+					return true;
+				}
+			} else {
+				if (temp.getNext().getValue().equals(obj)) {
+					temp.setNext(temp.getNext().getNext());
+					nodeCount--;
+					return true;
+				}
 			}
 			temp = temp.getNext();
 		}
@@ -125,6 +155,9 @@ public class SinglyLinkedList<E> {
 		ListNode temp = head;
 		for (int j = 0; j < i; j++) {
 			temp = temp.getNext();
+		}
+		if (temp.getValue() == null) {
+			return null;
 		}
 		return (E) temp.getValue();
 	}
@@ -148,6 +181,10 @@ public class SinglyLinkedList<E> {
 	public void add(int i, Object obj) {
 		if (i < 0 || i >= nodeCount) {
 			throw new IndexOutOfBoundsException();
+		}
+		if (i == nodeCount - 1) {
+			add((E)obj);
+			return;
 		}
 		ListNode temp = head;
 		for (int j = 0; j < i - 1; j++) {
