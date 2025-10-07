@@ -87,7 +87,7 @@ public class DoublyLinkedList {
 		ListNode2<Nucleotide> temp = SENTINEL;
 		for (int i = 0; i < nodeCount; i++) {
 			temp = temp.getNext();
-			if (temp.equals(obj)) {
+			if (temp.getValue().equals(obj)) {
 				temp.getPrevious().setNext(temp.getNext());
 				temp.getNext().setPrevious(temp.getPrevious());
 				nodeCount--;
@@ -160,12 +160,12 @@ public class DoublyLinkedList {
 	public String toString() {
 		StringBuilder str = new StringBuilder("[");
 		ListNode2 temp = SENTINEL.getNext();
-		while (temp != SENTINEL) {
+		while (temp != SENTINEL && temp != SENTINEL.getPrevious()) {
 			str.append(temp.getValue());
 			str.append(", ");
 			temp = temp.getNext();
 		}
-		str.delete(str.length() - 2, str.length());
+		if ()
 		str.append("]");
 		return str.toString();
 	}
@@ -251,6 +251,7 @@ public class DoublyLinkedList {
 				num++;
 			}
 		}
+		nodeCount -= seg.nodeCount;
 		return isRemoved;
 	}
 
@@ -258,13 +259,39 @@ public class DoublyLinkedList {
 	// Delete the last three nodes in the list
 	// If there are not enough nodes, return false
 	public boolean deleteLastThree() {
+		ListNode2<Nucleotide> temp = SENTINEL;
+		if (nodeCount < 3) {
+			return false;
+		}
 
+		for (int i = 0; i < 4; i++) {
+			temp = temp.getPrevious();
+		}
+		temp.setNext(SENTINEL);
+		SENTINEL.setPrevious(temp);
+		nodeCount -= 3;
+		return true;
 	}
 
 	// Like question 11 on the SinglyLinkedList test:
 	// Replaces every node containing "A" with three nodes containing "T" "A" "C"
 	public void replaceEveryAWithTAC() {
-
+		ListNode2<Nucleotide> temp = SENTINEL;
+		ListNode2<Nucleotide> temp2 = SENTINEL;
+		for (int i = 0; i < nodeCount; i++) {
+			temp = temp.getNext();
+			if (temp.getValue() != null) {
+				if (temp.getValue().equals(Nucleotide.A)) {
+					temp2 = temp.getNext();
+					temp.setValue(Nucleotide.T);
+					temp.setNext(new ListNode2<Nucleotide>(Nucleotide.A));
+					temp.getNext().setNext(new ListNode2<Nucleotide>(Nucleotide.C));
+					temp2.setPrevious(temp.getNext().getNext());
+					i += 2;
+					nodeCount += 2;
+				}
+			}
+		}
 	}
 
 }

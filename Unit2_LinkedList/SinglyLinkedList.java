@@ -110,41 +110,52 @@ public class SinglyLinkedList<E> {
 	// Removes the first element that is equal to obj, if any.
 	// Returns true if successful; otherwise returns false.
 	public boolean remove(E obj) {
+		if (!contains(obj)) {
+			return false;
+		}
 		boolean isNull = false;
 		if (obj == null) {
 			isNull = true;
 		}
-		if (head.getValue() == null) {
-			if (isNull) {
-				head = head.getNext();
+		ListNode temp = head;
+		if (temp.getValue() != null) {
+			if (temp.getValue().equals(obj)) {
+				if (!temp.equals(tail)) {
+					head = temp.getNext();
+				} else {
+					head = null;
+				}
 				nodeCount--;
 				return true;
 			}
 		} else {
-			if (head.getValue().equals(obj)) {
-				head = head.getNext();
+			if (isNull) {
+				if (nodeCount == 1) {
+					head = null;
+				} else {
+					head = head.getNext();
+				}
 				nodeCount--;
 				return true;
 			}
 		}
-		ListNode temp = head;
-		for (int i = 1; i <= nodeCount; i++) {
-			if (temp.getNext().getValue() == null) {
-				if (isNull) {
-					temp.setNext(temp.getNext().getNext());
-					nodeCount--;
-					return true;
-				}
-			} else {
-				if (temp.getNext().getValue().equals(obj)) {
-					temp.setNext(temp.getNext().getNext());
-					nodeCount--;
-					return true;
-				}
+		if (!isNull) {
+			while (!obj.equals(temp.getNext().getValue())) {
+				temp = temp.getNext();
 			}
-			temp = temp.getNext();
+		} else {
+			while (temp.getNext().getValue() != null) {
+				temp = temp.getNext();
+			}
 		}
-		return false;
+		if (temp.getNext().equals(tail)) {
+			tail = temp;
+		} else {
+			temp.setNext(temp.getNext().getNext());
+		}
+		nodeCount--;
+		return true;
+
 	}
 
 	// Returns the i-th element.
@@ -183,7 +194,7 @@ public class SinglyLinkedList<E> {
 			throw new IndexOutOfBoundsException();
 		}
 		if (i == nodeCount - 1) {
-			add((E)obj);
+			add((E) obj);
 			return;
 		}
 		ListNode temp = head;

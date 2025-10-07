@@ -1,6 +1,6 @@
 public class SinglyLinkedListTester {
     public static void main(String[] args) {
-        String[] strs = new String[] {"Y", "A", "R", "I"};
+       
         SinglyLinkedList<String> test = new SinglyLinkedList<>(strs);
         test.add(2, null);
         System.out.println(test.toString());
@@ -9,7 +9,16 @@ public class SinglyLinkedListTester {
         test.set(1, "A");
         test.set(0, "A");
         System.out.println(test.toString());
-        test.set(-1, "A");
+        test.remove("Y");
+        test.remove(1);
+        test.remove(0);
+        test.remove(null);
+        test.remove(null);
+        test.remove("I");
+        System.out.println(test.toString());
+
+	
+
 
     }
 }
