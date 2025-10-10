@@ -153,6 +153,7 @@ public class DoublyLinkedList {
 		Nucleotide ret = temp.getValue();
 		temp.getPrevious().setNext(temp.getNext());
 		temp.getNext().setPrevious(temp.getPrevious());
+		nodeCount--;
 		return ret;
 	}
 
@@ -165,7 +166,9 @@ public class DoublyLinkedList {
 			str.append(", ");
 			temp = temp.getNext();
 		}
-		if ()
+		if (temp != SENTINEL) {
+			str.append(temp.getValue());
+		}
 		str.append("]");
 		return str.toString();
 	}
