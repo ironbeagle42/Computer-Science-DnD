@@ -43,18 +43,32 @@ public class Recursion {
 	// {1,2}, {2,3}, {3,4}, {1,2,3}, {1,2,4}, {1,3,4}, {1,2,3,4}
 	// Precondition: n > 0
 	public static long countNonConsecutiveSubsets(int n) {
-		if (n >= 1) {
-			return n + countNonConsecutiveSubsets(n - 1) + countNonConsecutiveSubsets(n - 2);
+		if (n == 1) {
+			return 2;
 		}
-		return 1;
+		return n - 1 + countNonConsecutiveSubsets(n - 1);
+		// return fibonacciSequence(n + 2);
 
 	}
+
+	// public static long fibonacciSequence(int n) {
+	// 	if (n <= 0) {
+	// 		return 0;
+	// 	} else if (n  == 1) {
+	// 		return 1;
+	// 	}
+	// 	return fibonacciSequence(n - 1) + fibonacciSequence(n - 2);
+	// }
 
 	// A kid at the bottom of the stairs can jump up 1, 2, or 3 stairs at a time.
 	// How many different ways can they jump up n stairs?
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
+		if (n == 1) {
+			return 1;
+		}
+		return n + countWaysToJumpUpStairs(n - 1);
 
 	}
 
