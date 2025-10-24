@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Recursion {
 
 	// Prints the value of every node in the singly linked list with the given head,
@@ -44,9 +46,9 @@ public class Recursion {
 	// Precondition: n > 0
 	public static long countNonConsecutiveSubsets(int n) {
 		// if (n == 1) {
-		// 	return 2;
+		// return 2;
 		// }
-		// return  n - 1 + countNonConsecutiveSubsets(n - 1);
+		// return n - 1 + countNonConsecutiveSubsets(n - 1);
 		return fibonacciSequence(n + 2);
 
 	}
@@ -54,7 +56,7 @@ public class Recursion {
 	public static long fibonacciSequence(int n) {
 		if (n <= 0) {
 			return 0;
-		} else if (n  == 1) {
+		} else if (n == 1) {
 			return 1;
 		}
 		return fibonacciSequence(n - 1) + fibonacciSequence(n - 2);
@@ -68,7 +70,14 @@ public class Recursion {
 		if (n == 1) {
 			return 1;
 		}
-		return n + countWaysToJumpUpStairs(n - 2) + countWaysToJumpUpStairs(n - 3);
+		if (n == 2) {
+			return 2;
+		}
+		if (n == 3) {
+			return 4;
+		}
+		return countWaysToJumpUpStairs(n - 1) + countWaysToJumpUpStairs(n - 2)
+				+ countWaysToJumpUpStairs(n - 3);
 
 	}
 
@@ -85,8 +94,32 @@ public class Recursion {
 	// "bc", "abc"
 	// Order is your choice
 	public static void printSubsets(String str) {
-
+		ArrayList<Character> list = new ArrayList<>();
+		for (int i = 0; i < str.length(); i++) {
+			list.add(str.charAt(i));
+		}
+		printSubsets(list);
 	}
+
+	public static void printSubsets(ArrayList<Character> list) {
+		if (list.size() == 1) {
+
+		}
+		for (int i = 0; i < list.size(); i++) {
+
+		}
+	}
+
+	public static void printArray(ArrayList<Character> list) {
+		StringBuilder ret = new StringBuilder();
+		ret.append("{");
+		ret.append(list.get(0));
+		for (int i = 1; i < list.size(); i++) {
+			ret.append(", ");
+			ret.append(list.get(i));
+		}
+	}
+
 
 	// List contains a single String to start.
 	// Prints all the permutations of str on separate lines
