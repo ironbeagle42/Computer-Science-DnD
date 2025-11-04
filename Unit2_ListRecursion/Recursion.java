@@ -95,15 +95,40 @@ public class Recursion {
 	// Order is your choice
 	public static void printSubsets(String str) {
 		ArrayList<String> subsets = new ArrayList<>();
-		if (str.length() == 1) {
-			subsets.add("");
-			subsets.add(str);
-			return;
-		}
-		printSubsets(str.substring(0, str.length() - 1));
+		merge(subsets, subsets(str));
+		printFinal(subsets);
 	}
 
-	public static void printSubsets(ArrayList<String> subsets) {
+	public static ArrayList<String> subsets(String str) {
+		ArrayList<String> subsets2 = new ArrayList<>();
+		ArrayList<String> subsets = new ArrayList<>();
+		if (str.length() <= 1) {
+			subsets.add("");
+			subsets.add(str);
+			return subsets;
+		}
+		String newStr = str.substring(0, str.length() - 1);
+		subsets = merge(subsets(newStr),
+				addLastLetter(subsets(newStr), str.substring(str.length() - 1)));
+		return subsets;
+	}
+
+	public static ArrayList<String> addLastLetter(ArrayList<String> subsets, String letter) {
+		for (int i = 0; i < subsets.size(); i++) {
+			subsets.set(i, subsets.get(i) + letter);
+		}
+		return subsets;
+	}
+
+	public static ArrayList<String> merge(ArrayList<String> a1, ArrayList<String> a2) {
+		for (int i = 0; i < a2.size(); i++) {
+			a1.add(a2.get(i));
+		}
+		return a1;
+	}
+
+
+	public static void printFinal(ArrayList<String> subsets) {
 		StringBuilder ret = new StringBuilder();
 		ret.append("{");
 		ret.append(subsets.getFirst());
@@ -117,7 +142,6 @@ public class Recursion {
 
 
 
-
 	// List contains a single String to start.
 	// Prints all the permutations of str on separate lines
 	// You may assume that str has no repeated characters
@@ -125,7 +149,20 @@ public class Recursion {
 	// "cab", "cba"
 	// Order is your choice
 	public static void printPermutations(String str) {
+		ArrayList<String> chars = new ArrayList<>();
+		for (int i = 0; i < str.length(); i++) {
+			chars.add(str.substring(i, i+1));
+		}
+		chars = makePermutations(chars);
+	}
 
+	public static ArrayList<String> makePermutations(ArrayList<String> chars) {
+		ArrayList<String> subsets = new ArrayList<>();
+		for (int i = 0; i < chars.size(); i++) {
+
+		}
+		subsets = merge(subsets, subsets);
+		return subsets;
 	}
 
 	// Performs a mergeSort on the given array of ints
