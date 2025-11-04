@@ -94,31 +94,28 @@ public class Recursion {
 	// "bc", "abc"
 	// Order is your choice
 	public static void printSubsets(String str) {
-		ArrayList<Character> list = new ArrayList<>();
-		for (int i = 0; i < str.length(); i++) {
-			list.add(str.charAt(i));
+		ArrayList<String> subsets = new ArrayList<>();
+		if (str.length() == 1) {
+			subsets.add("");
+			subsets.add(str);
+			return;
 		}
-		printSubsets(list);
+		printSubsets(str.substring(0, str.length() - 1));
 	}
 
-	public static void printSubsets(ArrayList<Character> list) {
-		if (list.size() == 1) {
-
-		}
-		for (int i = 0; i < list.size(); i++) {
-
-		}
-	}
-
-	public static void printArray(ArrayList<Character> list) {
+	public static void printSubsets(ArrayList<String> subsets) {
 		StringBuilder ret = new StringBuilder();
 		ret.append("{");
-		ret.append(list.get(0));
-		for (int i = 1; i < list.size(); i++) {
+		ret.append(subsets.getFirst());
+		for (int i = 1; i < subsets.size(); i++) {
 			ret.append(", ");
-			ret.append(list.get(i));
+			ret.append(subsets.get(i));
 		}
+		ret.append("}");
+		System.out.println(ret);
 	}
+
+
 
 
 	// List contains a single String to start.

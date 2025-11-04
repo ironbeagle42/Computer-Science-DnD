@@ -7,6 +7,7 @@ public class RecursionTester {
         test.add("I");
         Recursion.printListInReverse(test.getHead());
         System.out.println(Recursion.countNonConsecutiveSubsets(10));
+        Recursion.printSubsets("ab");
 
     }
 }
