@@ -131,7 +131,7 @@ public class Recursion {
 	public static void printFinal(ArrayList<String> subsets) {
 		StringBuilder ret = new StringBuilder();
 		ret.append("{");
-		ret.append(subsets.getFirst());
+		ret.append(subsets.get(0));
 		for (int i = 1; i < subsets.size(); i++) {
 			ret.append(", ");
 			ret.append(subsets.get(i));
@@ -151,17 +151,33 @@ public class Recursion {
 	public static void printPermutations(String str) {
 		ArrayList<String> chars = new ArrayList<>();
 		for (int i = 0; i < str.length(); i++) {
-			chars.add(str.substring(i, i+1));
+			chars.add(str.substring(i, i + 1));
 		}
 		chars = makePermutations(chars);
+		printFinal(chars);
 	}
 
 	public static ArrayList<String> makePermutations(ArrayList<String> chars) {
 		ArrayList<String> subsets = new ArrayList<>();
-		for (int i = 0; i < chars.size(); i++) {
-
+		ArrayList<String> tempChars = new ArrayList<>();
+		String startingChar = "";
+		if (chars.size() == 1) {
+			return chars;
 		}
-		subsets = merge(subsets, subsets);
+		if (chars.size() == 0) {
+			chars.add("");
+			return chars;
+		}
+		for (int i = 0; i < chars.size(); i++) {
+			tempChars = chars;
+			startingChar = chars.get(i);
+			tempChars.remove(i);
+			tempChars = makePermutations(tempChars);
+			for (int j = 0; j < tempChars.size(); j++) {
+				tempChars.set(j, startingChar + tempChars.get(j));
+			}
+			subsets = merge(subsets, tempChars);
+		}
 		return subsets;
 	}
 
@@ -185,7 +201,37 @@ public class Recursion {
 	// the form "1 -> 2", meaning "take the top disk of tower 1 and
 	// put it on tower 2" etc.
 	public static void solveHanoi(int startingDisks) {
+		printFinal(hanoiTowers(startingDisks, 1, 3));
+		// System.out.println(hanoiTowers(startingDisks, 1, 3).size());
 
+	}
+
+	public static ArrayList<String> hanoiTowers(int startingDisks, int startTower, int endTower) {
+		ArrayList<String> moves = new ArrayList<>();
+		ArrayList<String> tempMoves = new ArrayList<>();
+		int thirdTower = 0;
+		if (startTower == 1 || endTower == 1) {
+			if (startTower == 3 || endTower == 3) {
+				thirdTower = 2;
+			} else {
+				thirdTower = 3;
+			}
+		} else if (startTower == 2 || endTower == 2) {
+			if (startTower == 3 || endTower == 3) {
+				thirdTower = 1;
+			} else {
+				thirdTower = 3;
+			}
+		}
+		if (startingDisks == 1) {
+			moves.add(startTower + "-->" + endTower);
+			return moves;
+		}
+		tempMoves = hanoiTowers(startingDisks - 1, startTower, thirdTower);
+		tempMoves.add(startTower + "-->" + endTower);
+		tempMoves = merge(tempMoves, hanoiTowers(startingDisks - 1, thirdTower, endTower));
+		moves = merge(tempMoves, moves);
+		return moves;
 	}
 
 	// You are partaking in a scavenger hunt!

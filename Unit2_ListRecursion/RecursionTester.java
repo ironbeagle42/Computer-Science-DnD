@@ -8,6 +8,8 @@ public class RecursionTester {
         Recursion.printListInReverse(test.getHead());
         System.out.println(Recursion.countNonConsecutiveSubsets(10));
         Recursion.printSubsets("abcd");
+        Recursion.solveHanoi(3);
+        Recursion.printPermutations("abc");
 
     }
 }
