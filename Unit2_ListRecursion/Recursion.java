@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Recursion {
 
@@ -164,18 +165,15 @@ public class Recursion {
 		if (chars.size() == 1) {
 			return chars;
 		}
-		if (chars.size() == 0) {
-			chars.add("");
-			return chars;
-		}
 		for (int i = 0; i < chars.size(); i++) {
-			tempChars = chars;
+			tempChars = (ArrayList<String>)chars.clone();
 			startingChar = chars.get(i);
 			tempChars.remove(i);
 			tempChars = makePermutations(tempChars);
 			for (int j = 0; j < tempChars.size(); j++) {
-				tempChars.set(j, startingChar + tempChars.get(j));
+				tempChars.set(j, (String)(startingChar + tempChars.get(j)));
 			}
+			// printFinal(tempChars);
 			subsets = merge(subsets, tempChars);
 		}
 		return subsets;
@@ -185,6 +183,28 @@ public class Recursion {
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
 
+	}
+
+	public static int[] merge(int[] ints1, int[] ints2) {
+		int int1 = 0;
+		int int2 = 0;
+		int[] ret = new int[ints1.length + ints2.length];
+		for (int i = 0; i < ret.length; i++) {
+			if (int1 == ints1.length - 1) {
+				ret[i] = ints2[int2];
+				int2++;
+			} else if (int2 == ints2.length - 1) {
+				ret[i] = ints1[int1];
+				int1++;
+			} else if (ints1[int1] >= ints2[int2]) {
+				ret[i] = ints2[int2];
+				int2++;
+			} else {
+				ret[i] = ints1[int1];
+				int1++;
+			}
+		}
+		return ret;
 	}
 
 	// Performs a quickSort on the given array of ints
@@ -254,7 +274,27 @@ public class Recursion {
 	// time 9
 	// for a total of 20 points, so it would return 20.
 	public static int scavHunt(int[] times, int[] points) {
+		return findMax(times, points, times[0]);
+	}
 
+	public static int findMax(int[] times, int[] points, int num) {
+		int num2 = points[findIndex(times, num)];
+		if (num >= times[times.length - 1]) {
+			return 0;
+		}
+		if (num2 + findMax(times, points, num + 5) >= findMax(times, points, num + 1)) {
+			return num2 + findMax(times, points, num+5);
+		}
+		return findMax(times, points, num+1);
+	}
+
+	public static int findIndex(int[] times, int num) {
+		for (int i = 0; i < times.length; i++) {
+			if (times[i] >= num) {
+				return i;
+			}
+		}
+		return 0;
 	}
 
 }
