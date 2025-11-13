@@ -14,7 +14,7 @@ public class RecursionTester {
         int[] points = {100, 15, 15, 80, 10};
         System.out.println(Recursion.scavHunt(times, points));
         int[] mergeHelp = {5, 6, 9, 15, 100};
-        System.out.println(Recursion.merge(times, mergeHelp));
+        System.out.println(Recursion.merge(times, mergeHelp).toString());
 
     }
 }

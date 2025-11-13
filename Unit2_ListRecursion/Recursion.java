@@ -182,6 +182,18 @@ public class Recursion {
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
+		int[] left = leftHalf(ints, ints.length / 2);
+		int[] right = rightHalf(ints, ints.length / 2);
+		mergeSort(left);
+		mergeSort(right);
+		ints = merge(left, right);
+	}
+
+	public static int[] leftHalf(int[] ints, int pivot) {
+
+	}
+	
+	public static int[] rightHalf(int[] ints, int pivot) {
 
 	}
 
@@ -190,10 +202,10 @@ public class Recursion {
 		int int2 = 0;
 		int[] ret = new int[ints1.length + ints2.length];
 		for (int i = 0; i < ret.length; i++) {
-			if (int1 == ints1.length - 1) {
+			if (int1 == ints1.length) {
 				ret[i] = ints2[int2];
 				int2++;
-			} else if (int2 == ints2.length - 1) {
+			} else if (int2 == ints2.length) {
 				ret[i] = ints1[int1];
 				int1++;
 			} else if (ints1[int1] >= ints2[int2]) {
