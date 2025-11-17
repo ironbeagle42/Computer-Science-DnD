@@ -21,18 +21,21 @@ public class Recursion {
 	// Trying to infect outside the confines of the grid also has no effect
 	// Precondition: grid has no null entries
 	public static void infect(String[][] grid, int r, int c) {
+		if (r < 0 || r == grid.length || c < 0 || c == grid[0].length) {
+			return;
+		}
 		if (!grid[r][c].equals("vaccinated") && !grid[r][c].equals("infected")) {
 			grid[r][c] = "infected";
-			if (grid[r - 1][c] != null) {
+			if (r != 0) {
 				infect(grid, r - 1, c);
 			}
-			if (grid[r + 1][c] != null) {
-				infect(grid, r + 1, c);
-			}
-			if (grid[r][c - 1] != null) {
+			if (c != 0) {
 				infect(grid, r, c - 1);
 			}
-			if (grid[r][c + 1] != null) {
+			if (r != grid.length - 1) {
+				infect(grid, r + 1, c);
+			}
+			if (c != grid[0].length - 1) {
 				infect(grid, r, c + 1);
 			}
 		}
@@ -128,6 +131,12 @@ public class Recursion {
 		return a1;
 	}
 
+	public static ArrayList<Integer> mergeInt(ArrayList<Integer> a1, ArrayList<Integer> a2) {
+		for (int i = 0; i < a2.size(); i++) {
+			a1.add(a2.get(i));
+		}
+		return a1;
+	}
 
 	public static void printFinal(ArrayList<String> subsets) {
 		StringBuilder ret = new StringBuilder();
@@ -166,12 +175,12 @@ public class Recursion {
 			return chars;
 		}
 		for (int i = 0; i < chars.size(); i++) {
-			tempChars = (ArrayList<String>)chars.clone();
+			tempChars = (ArrayList<String>) chars.clone();
 			startingChar = chars.get(i);
 			tempChars.remove(i);
 			tempChars = makePermutations(tempChars);
 			for (int j = 0; j < tempChars.size(); j++) {
-				tempChars.set(j, (String)(startingChar + tempChars.get(j)));
+				tempChars.set(j, (String) (startingChar + tempChars.get(j)));
 			}
 			// printFinal(tempChars);
 			subsets = merge(subsets, tempChars);
@@ -182,19 +191,38 @@ public class Recursion {
 	// Performs a mergeSort on the given array of ints
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void mergeSort(int[] ints) {
+		int[] temp = mergeSort2(ints);
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = temp[i];
+		}
+	}
+
+	public static int[] mergeSort2(int[] ints) {
+		if (ints.length == 1) {
+			return ints;
+		}
 		int[] left = leftHalf(ints, ints.length / 2);
 		int[] right = rightHalf(ints, ints.length / 2);
 		mergeSort(left);
 		mergeSort(right);
 		ints = merge(left, right);
+		return ints;
 	}
 
 	public static int[] leftHalf(int[] ints, int pivot) {
-
+		int[] ret = new int[pivot];
+		for (int i = 0; i < pivot; i++) {
+			ret[i] = ints[i];
+		}
+		return ret;
 	}
-	
-	public static int[] rightHalf(int[] ints, int pivot) {
 
+	public static int[] rightHalf(int[] ints, int pivot) {
+		int[] ret = new int[ints.length - pivot];
+		for (int i = pivot; i < ints.length; i++) {
+			ret[i - pivot] = ints[i];
+		}
+		return ret;
 	}
 
 	public static int[] merge(int[] ints1, int[] ints2) {
@@ -223,7 +251,47 @@ public class Recursion {
 	// Use the middle element (index n/2) as the pivot
 	// Precondition: you may assume there are NO duplicates!!!
 	public static void quickSort(int[] ints) {
+		ArrayList<Integer> temp = quickSort2(toArrayList(ints));
+		int[] temp2 = toArray(temp);
+		for (int i = 0; i < ints.length; i++) {
+			ints[i] = temp2[i];
+		}
+	}
 
+	public static ArrayList<Integer> quickSort2(ArrayList<Integer> ints) {
+		if (ints.size() <= 1) {
+			return ints;
+		}
+		int pivot = ints.get(ints.size() / 2);
+		ArrayList<Integer> smaller = new ArrayList<>();
+		ArrayList<Integer> larger = new ArrayList<>();
+		larger.add(pivot);
+		for (int i = 0; i < ints.size(); i++) {
+			if (ints.get(i) > pivot) {
+				larger.add(ints.get(i));
+			} else if (ints.get(i) != pivot) {
+				smaller.add(ints.get(i));
+			}
+		}
+		smaller = quickSort2(smaller);
+		larger = quickSort2(larger);
+		return (mergeInt(smaller, larger));
+	}
+
+	public static ArrayList<Integer> toArrayList(int[] ints) {
+		ArrayList<Integer> temp = new ArrayList<>();
+		for (int i = 0; i < ints.length; i++) {
+			temp.add(ints[i]);
+		}
+		return temp;
+	}
+
+	public static int[] toArray(ArrayList<Integer> ints) {
+		int[] temp = new int[ints.size()];
+		for (int i = 0; i < ints.size(); i++) {
+			temp[i] = ints.get(i);
+		}
+		return temp;
 	}
 
 	// Prints a sequence of moves (one on each line)
@@ -233,34 +301,36 @@ public class Recursion {
 	// the form "1 -> 2", meaning "take the top disk of tower 1 and
 	// put it on tower 2" etc.
 	public static void solveHanoi(int startingDisks) {
-		printFinal(hanoiTowers(startingDisks, 1, 3));
-		// System.out.println(hanoiTowers(startingDisks, 1, 3).size());
-
+		ArrayList<String> subsets = hanoiTowers(startingDisks, 0, 2);
+		for (int i = 1; i < subsets.size(); i++) {
+			System.out.println(subsets.get(i));
+		}
+		// printFinal(hanoiTowers(startingDisks, 0, 2));
 	}
 
 	public static ArrayList<String> hanoiTowers(int startingDisks, int startTower, int endTower) {
 		ArrayList<String> moves = new ArrayList<>();
 		ArrayList<String> tempMoves = new ArrayList<>();
 		int thirdTower = 0;
-		if (startTower == 1 || endTower == 1) {
-			if (startTower == 3 || endTower == 3) {
-				thirdTower = 2;
-			} else {
-				thirdTower = 3;
-			}
-		} else if (startTower == 2 || endTower == 2) {
-			if (startTower == 3 || endTower == 3) {
+		if (startTower == 0 || endTower == 0) {
+			if (startTower == 2 || endTower == 2) {
 				thirdTower = 1;
 			} else {
-				thirdTower = 3;
+				thirdTower = 2;
+			}
+		} else if (startTower == 1 || endTower == 1) {
+			if (startTower == 2 || endTower == 2) {
+				thirdTower = 0;
+			} else {
+				thirdTower = 2;
 			}
 		}
 		if (startingDisks == 1) {
-			moves.add(startTower + "-->" + endTower);
+			moves.add(startTower + " -> " + endTower);
 			return moves;
 		}
 		tempMoves = hanoiTowers(startingDisks - 1, startTower, thirdTower);
-		tempMoves.add(startTower + "-->" + endTower);
+		tempMoves.add(startTower + " -> " + endTower);
 		tempMoves = merge(tempMoves, hanoiTowers(startingDisks - 1, thirdTower, endTower));
 		moves = merge(tempMoves, moves);
 		return moves;
@@ -295,9 +365,9 @@ public class Recursion {
 			return 0;
 		}
 		if (num2 + findMax(times, points, num + 5) >= findMax(times, points, num + 1)) {
-			return num2 + findMax(times, points, num+5);
+			return num2 + findMax(times, points, num + 5);
 		}
-		return findMax(times, points, num+1);
+		return findMax(times, points, num + 1);
 	}
 
 	public static int findIndex(int[] times, int num) {
