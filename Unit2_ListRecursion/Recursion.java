@@ -7,7 +7,9 @@ public class Recursion {
 	// but in reverse
 	public static void printListInReverse(ListNode head) {
 		if (head.getNext() != null) {
-			printListInReverse(head.getNext());
+			if (!head.getNext().equals(head)) {
+				printListInReverse(head.getNext());
+			}
 		}
 		System.out.println(head.getValue());
 	}
@@ -71,6 +73,9 @@ public class Recursion {
 	// Jumping 1-1-2 is considered different than jumping 1-2-1
 	// Precondition: n > 0
 	public static long countWaysToJumpUpStairs(int n) {
+		if (n <= 0) {
+			return 0;
+		}
 		if (n == 1) {
 			return 1;
 		}
@@ -98,9 +103,15 @@ public class Recursion {
 	// "bc", "abc"
 	// Order is your choice
 	public static void printSubsets(String str) {
+		if (str == null) {
+			System.out.println("");
+			return;
+		}
 		ArrayList<String> subsets = new ArrayList<>();
 		merge(subsets, subsets(str));
-		printFinal(subsets);
+		for (int i = 0; i < subsets.size(); i++) {
+			System.out.println(subsets.get(i));
+		}
 	}
 
 	public static ArrayList<String> subsets(String str) {
@@ -164,7 +175,9 @@ public class Recursion {
 			chars.add(str.substring(i, i + 1));
 		}
 		chars = makePermutations(chars);
-		printFinal(chars);
+		for (int i = 0; i < chars.size(); i++) {
+			System.out.println(chars.get(i));
+		}
 	}
 
 	public static ArrayList<String> makePermutations(ArrayList<String> chars) {
@@ -302,7 +315,7 @@ public class Recursion {
 	// put it on tower 2" etc.
 	public static void solveHanoi(int startingDisks) {
 		ArrayList<String> subsets = hanoiTowers(startingDisks, 0, 2);
-		for (int i = 1; i < subsets.size(); i++) {
+		for (int i = 0; i < subsets.size(); i++) {
 			System.out.println(subsets.get(i));
 		}
 		// printFinal(hanoiTowers(startingDisks, 0, 2));
