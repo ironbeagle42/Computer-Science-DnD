@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
  * Handles interactive navigation of the file system This class reads commands from standard input,
@@ -61,16 +62,20 @@ public class Navigator {
             return;
         }
         while (arg != "") {
+            boolean madeCut = false;
             for (int i = 0; i < arg.length(); i++) {
                 if (arg.charAt(i) == '/') {
                     currentDirectory =
                             (FolderNode) currentDirectory.getChildByName(arg.substring(0, i));
                     arg = arg.substring(i + 1);
-                    break;
+                    madeCut = true;
+                    i = arg.length();
                 }
             }
-            currentDirectory = (FolderNode) currentDirectory.getChildByName(arg);
-            arg = "";
+            if (!madeCut) {
+                currentDirectory = (FolderNode) currentDirectory.getChildByName(arg);
+                arg = "";
+            }
         }
     }
 
@@ -79,7 +84,9 @@ public class Navigator {
      * typical file system listings.
      */
     private void ls(String[] args) {
-        // TODO: print names of all child nodes of currentDirectory
+        for (int i = 0; i < currentDirectory.getChildren().size(); i++) {
+            System.out.println(currentDirectory.getChildren().get(i).getName());
+        }
     }
 
     /**
@@ -87,6 +94,7 @@ public class Navigator {
      */
     private void mkdir(String[] args) {
         // TODO: read folder name from args and delegate to currentDirectory.addFolder(...)
+        currentDirectory.addFolder(args[0]);
     }
 
     /**
@@ -94,6 +102,7 @@ public class Navigator {
      */
     private void touch(String[] args) {
         // TODO: read file name and size from args and delegate to currentDirectory.addFile(...)
+        currentDirectory.addFile(args[0], Integer.parseInt(args[1]));
     }
 
     /**
@@ -102,6 +111,17 @@ public class Navigator {
      */
     private void find(String[] args) {
         // TODO: use recursive search starting at currentDirectory
+        String name = args[0];
+        for (int i = 0; i < currentDirectory.getChildren().size(); i++) {
+            if (currentDirectory.getChildren().get(i).getName().equals(name)) {
+                System.out.println(currentDirectory.getChildren().get(i).toString());
+            } else {
+                if (currentDirectory.getChildren().get(i).isFolder()) {
+                    currentDirectory = (FolderNode) currentDirectory.getChildren().get(i);
+                    find(args);
+                }
+            }
+        }
     }
 
     /**
@@ -109,6 +129,16 @@ public class Navigator {
      */
     private void pwd(String[] args) {
         // TODO: use currentDirectory.toString() or similar path builder
+        String ret = currentDirectory.getName();
+        currentDirectory = currentDirectory.getParent();
+        while (currentDirectory.getParent() != null) {
+            ret = currentDirectory.getName() + "/" + ret;
+            currentDirectory = currentDirectory.getParent();
+        }
+
+
+        ret = "/" + ret;
+        System.out.println(ret);
     }
 
     /**
@@ -116,8 +146,22 @@ public class Navigator {
      * depth limits if provided by the arguments.
      */
     private void tree(String[] args) {
-        // TODO: implement tree-style printing with indentation and branch characters
+        String start = args[0];
+        if (args.length == 1) {
+            System.out.println(".");
+        }
+        for (int i = 0; i < currentDirectory.getChildren().size(); i++) {
+            if (i + 1 != currentDirectory.getChildren().size()) {
+                start = start + "|  ";
+            } else {
+                start = start + "   ";
+            }
+            tree(args);
+        }
+        //make start string, send it thru to recursive call, add to all strings in that recursive call
     }
+
+
 
     /**
      * Prints how many nodes (files and folders) exist in the current directory and all of its
@@ -147,7 +191,7 @@ public class Navigator {
      * this directory to any file or subdirectory beneath it. An empty directory has value 0.
      */
     private void height(String[] args) {
-        // TODO: use a height method on currentDirectory
+        System.out.println(currentDirectory.getHeight());
     }
 
     /**
