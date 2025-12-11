@@ -76,10 +76,12 @@ public abstract class FileSystemNode {
 
         for (int i = 0; i <= getDepth(); i++) {
             if (node.getParent() == null) {
-                ret = "/null" + ret;
-                break;
+                return "/" + ret;
+            } else if (ret.equals("")) {
+                ret = node.getName();
+            } else {
+                ret = node.getName() + "/" + ret;
             }
-            ret = "/" + node.getName() + ret;
             node = node.getParent();
 
         }
