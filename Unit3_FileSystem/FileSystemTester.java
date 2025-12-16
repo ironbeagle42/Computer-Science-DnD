@@ -4,14 +4,13 @@ import java.io.PrintStream;
 /**
  * Small manual tester for the solution file-system implementation.
  *
- * This does NOT use JUnit. It just runs a few operations and prints out
- * what it's doing plus the observed behavior.or
+ * This does NOT use JUnit. It just runs a few operations and prints out what it's doing plus the
+ * observed behavior.or
  *
- * And also assumes (based on our design):
- *  - FileSystemTree#getRoot() returns a non-null FolderNode
- *  - FolderNode has addFolder(String) and addFile(String, int) that return boolean
- *  - FileSystemNode has getDepth(), getHeight(), getSize(), getTotalNodeCount()
- *  - Navigator has processUserInputString(String) which prints results to System.out
+ * And also assumes (based on our design): - FileSystemTree#getRoot() returns a non-null FolderNode
+ * - FolderNode has addFolder(String) and addFile(String, int) that return boolean - FileSystemNode
+ * has getDepth(), getHeight(), getSize(), getTotalNodeCount() - Navigator has
+ * processUserInputString(String) which prints results to System.out
  */
 public class FileSystemTester {
 
@@ -22,7 +21,8 @@ public class FileSystemTester {
         FolderNode root = tree.getRoot();
 
         if (root == null) {
-            System.out.println("[FAIL] Root is null. FileSystemTree.getRoot() must return a non-null root folder.");
+            System.out.println(
+                    "[FAIL] Root is null. FileSystemTree.getRoot() must return a non-null root folder.");
             return;
         } else {
             System.out.println("[PASS] Root is non-null.");
@@ -38,11 +38,21 @@ public class FileSystemTester {
         boolean addedMainJava = root.addFile("main.java", 120);
         boolean addedReadme = root.addFile("README.md", 80);
 
+
         int depthRoot = root.getDepth();
         int heightRoot = root.getHeight();
         int sizeRoot = root.getSize();
         int totalNodesRoot = root.getTotalNodeCount();
         Navigator test = new Navigator(tree);
+        System.out.println(totalNodesRoot);
+        test.processUserInputString("mkdir tester");
+        test.processUserInputString("cd tester");
+        test.processUserInputString("mkdir tester2");
+        test.processUserInputString("cd ..");
+        test.processUserInputString("cd docs");
+        test.processUserInputString("mkdir doc");
+        test.processUserInputString("mkdir doc2");
+        test.processUserInputString("cd /");
         test.processUserInputString("tree");
     }
 }

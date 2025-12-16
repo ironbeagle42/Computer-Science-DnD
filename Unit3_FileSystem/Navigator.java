@@ -113,17 +113,20 @@ public class Navigator {
      * their paths.
      */
     private void find(String[] args) {
-
         String name = args[0];
+        FolderNode temp = currentDirectory;
         for (int i = 0; i < currentDirectory.getChildren().size(); i++) {
             if (currentDirectory.getChildren().get(i).getName().equals(name)) {
                 System.out.println(currentDirectory.getChildren().get(i).toString());
             } else {
                 if (currentDirectory.getChildren().get(i).isFolder()) {
                     currentDirectory = (FolderNode) currentDirectory.getChildren().get(i);
-                    find(args);
+                    find(new String[] {name, "false"});
                 }
             }
+        }
+        if (args.length == 1) {
+            currentDirectory = temp;
         }
     }
 
@@ -142,28 +145,35 @@ public class Navigator {
         String start = "";
         if (args.length >= 1) {
             start += args[0];
-        }
-        if (args.length != 0) {
             System.out.println(start + "|---" + currentDirectory.getName());
+        } else {
+
         }
-        for (int i = 0; i < currentDirectory.getChildren().size(); i++) {
-            if (i + 1 != currentDirectory.getChildren().size()) {
-                if (currentDirectory.getParent() != null) {
+        FolderNode temp = currentDirectory;
+        for (int i = 0; i < temp.getChildren().size(); i++) {
+            if (i + 1 != temp.getChildren().size()) {
+                if (temp.getParent() != null) {
                     start = start + "|   ";
                 }
             } else {
-                start = start + "    ";
+                // only add spaces IF
+                if (temp.getParent() != null) {
+                    if (temp.getParent().getChildren().get(0).equals(temp)) {
+                        start = start + "   ";
+                    }
+                }
+                start = start + "   ";
+                //ASIOUHAFOUDIOHFAUJIOHFADHOUAFOHIDHOI5
             }
-            if (currentDirectory.getChildren().get(i).isFolder()) {
-                currentDirectory = (FolderNode) currentDirectory.getChildren().get(i);
+            if (temp.getChildren().get(i).isFolder()) {
+                currentDirectory = (FolderNode) temp.getChildren().get(i);
                 if (args.length == 0) {
                     args = new String[1];
                 }
                 args[0] = start;
                 tree(args);
             } else {
-                System.out
-                        .println(start + "|---" + currentDirectory.getChildren().get(i).getName());
+                System.out.println(start + "|---" + temp.getChildren().get(i).getName());
             }
         }
         // make start string, send it thru to recursive call, add to all strings in that recursive
