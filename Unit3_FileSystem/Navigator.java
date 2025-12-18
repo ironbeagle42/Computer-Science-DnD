@@ -158,20 +158,24 @@ public class Navigator {
             } else {
                 // only add spaces IF
                 if (temp.getParent() != null) {
-                    if (temp.getParent().getChildren().get(0).equals(temp)) {
-                        start = start + "   ";
+                    if (i == 0) {
+                        start = start + "    ";
                     }
                 }
-                start = start + "   ";
-                //ASIOUHAFOUDIOHFAUJIOHFADHOUAFOHIDHOI5
+                // ASIOUHAFOUDIOHFAUJIOHFADHOUAFOHIDHOI5
             }
             if (temp.getChildren().get(i).isFolder()) {
-                currentDirectory = (FolderNode) temp.getChildren().get(i);
-                if (args.length == 0) {
-                    args = new String[1];
+                FolderNode check = (FolderNode) temp.getChildren().get(i);
+                if (check.getChildren().size() > 0) {
+                    currentDirectory = (FolderNode) temp.getChildren().get(i);
+                    if (args.length == 0) {
+                        args = new String[1];
+                    }
+                    args[0] = start;
+                    tree(args);
+                } else {
+                    System.out.println(start + "|---" + temp.getChildren().get(i).getName());
                 }
-                args[0] = start;
-                tree(args);
             } else {
                 System.out.println(start + "|---" + temp.getChildren().get(i).getName());
             }
@@ -187,7 +191,7 @@ public class Navigator {
      * subdirectories.
      */
     private void count(String[] args) {
-        System.out.println(currentDirectory.getTotalNodeCount());
+        System.out.println(currentDirectory.getTotalNodeCount() - 1);
     }
 
     /**
