@@ -87,40 +87,50 @@ public class MyBST<E extends Comparable<E>> {
 			return false;
 		}
 		if (start.getValue().equals(value)) {
-			// remove value
-			BinaryNode<E> temp = null;
-			if (start.getRight() == null) {
-				if (start.getLeft() == null) {
-					if (start.getParent().getLeft() != null) {
-						if (start.getParent().getLeft().equals(start)) {
-							start.getParent().setLeft(null);
-						}
-					} else {
-						start.getParent().setRight(null);
-					}
-					return true;
-				} else {
-					// grab from left column
-					temp = start.getLeft();
-				}
-			} else {
-				temp = start.getRight();
-			}
-			while (temp.getLeft() != null) {
-				temp = temp.getLeft();
-			}
-			start.setValue(temp.getValue());
-			if (temp.getRight() != null) {
-				temp.getParent().setLeft(temp.getRight());
-
-			} else {
-				temp.getParent().setLeft(null);
-			}
+			return actuallyRemove(start);
 		}
 		if (start.getValue().compareTo(value) > 0) {
 			return removeHelper(value, start.getLeft());
 		}
 		return removeHelper(value, start.getRight());
+	}
+
+	public boolean actuallyRemove(BinaryNode<E> start) {
+
+		if (start.isLeaf()) {
+			if (start.getParent() == null) {
+				root = null;
+				return true;
+			}
+			if (start.isLeft()) {
+				start.getParent().setLeft(null);
+			} else {
+				start.getParent().setRight(null);
+			}
+			return true;
+		}
+
+		if (start.hasLeft() && !start.hasRight()) {
+			// grab from left
+			BinaryNode<E> temp = start;
+			temp = temp.getLeft();
+			while (temp.hasRight()) {
+				temp = temp.getRight();
+			}
+			start.setValue(temp.getValue());
+			temp.getParent().setRight(null);
+			return true;
+		}
+
+		// grab from right
+		BinaryNode<E> temp = start;
+		temp = temp.getRight();
+		while (temp.hasLeft()) {
+			temp = temp.getLeft();
+		}
+		start.setValue(temp.getValue());
+		temp.getParent().setLeft(null);
+		return true;
 	}
 
 	// Returns the minimum in the tree
@@ -160,6 +170,9 @@ public class MyBST<E extends Comparable<E>> {
 	}
 
 	public String toStringHelper(BinaryNode<E> start) {
+		if (start == null) {
+			return "";
+		}
 		String ret = "";
 		if (start.hasLeft()) {
 			ret += toStringHelper(start.getLeft());
