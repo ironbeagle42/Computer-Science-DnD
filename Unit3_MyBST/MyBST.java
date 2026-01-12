@@ -41,6 +41,10 @@ public class MyBST<E extends Comparable<E>> {
 	// Adds value to this BST, unless this tree already holds value.
 	// Returns true if value has been added; otherwise returns false.
 	public boolean add(E value) {
+		if (root == null) {
+			root = new BinaryNode<E>(value);
+			return true;
+		}
 		if (contains(value)) {
 			return false;
 		}
@@ -54,58 +58,64 @@ public class MyBST<E extends Comparable<E>> {
 		if (start.getValue().compareTo(value) > 0) {
 			if (start.getLeft() == null) {
 				start.setLeft(temp);
+				start.getLeft().setHeight(start.getHeight() + 1);
 				return true;
 			}
-			return containsHelper(value, start.getLeft());
+			return addHelper(value, start.getLeft());
 		}
 		if (start.getRight() == null) {
 			start.setRight(temp);
+			start.getRight().setHeight(start.getHeight() + 1);
 			return true;
 		}
-		return containsHelper(value, start.getRight());
+		return addHelper(value, start.getRight());
 	}
 
 	// Removes value from this BST. Returns true if value has been
 	// found and removed; otherwise returns false.
 	// If removing a node with two children: replace it with the
-	// largest node in the right subtree
+	// smallest node in the right subtree
 	public boolean remove(E value) {
-		if (contains(value)) {
+		if (!contains(value)) {
 			return false;
 		}
 		return removeHelper(value, root);
 	}
 
 	public boolean removeHelper(E value, BinaryNode<E> start) {
+		if (start == null) {
+			return false;
+		}
 		if (start.getValue().equals(value)) {
 			// remove value
-
-			//check if left or right of parent
-			boolean isLeft = false;
-			if (start.getParent().getLeft().equals(start)) {
-				isLeft = true;
+			BinaryNode<E> temp = null;
+			if (start.getRight() == null) {
+				if (start.getLeft() == null) {
+					if (start.getParent().getLeft() != null) {
+						if (start.getParent().getLeft().equals(start)) {
+							start.getParent().setLeft(null);
+						}
+					} else {
+						start.getParent().setRight(null);
+					}
+					return true;
+				} else {
+					// grab from left column
+					temp = start.getLeft();
+				}
+			} else {
+				temp = start.getRight();
 			}
-			//check if has multiple children
-			if (start.hasRight() && start.hasLeft()) {
-				start.setValue(maxHelper(start));
-			} else if (start.hasRight()) {
-				if (isLeft) {
-					start.getParent().setLeft(start.getRight());
-				} else {
-
-				}
-			} else if (start.hasLeft()) {
-				if (isLeft) {
-
-				} else {
-					
-				}
+			while (temp.getLeft() != null) {
+				temp = temp.getLeft();
+			}
+			start.setValue(temp.getValue());
+			if (temp.getRight() != null) {
+				temp.getParent().setLeft(temp.getRight());
 
 			} else {
-
+				temp.getParent().setLeft(null);
 			}
-
-			return true;
 		}
 		if (start.getValue().compareTo(value) > 0) {
 			return removeHelper(value, start.getLeft());
