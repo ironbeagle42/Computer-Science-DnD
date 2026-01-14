@@ -23,6 +23,9 @@ public class MyBST<E extends Comparable<E>> {
 	}
 
 	public boolean containsHelper(E value, BinaryNode<E> start) {
+		if (start == null) {
+			return false;
+		}
 		if (start.getValue().equals(value)) {
 			return true;
 		}
@@ -96,7 +99,6 @@ public class MyBST<E extends Comparable<E>> {
 	}
 
 	public boolean actuallyRemove(BinaryNode<E> start) {
-
 		if (start.isLeaf()) {
 			if (start.getParent() == null) {
 				root = null;
@@ -117,8 +119,16 @@ public class MyBST<E extends Comparable<E>> {
 			while (temp.hasRight()) {
 				temp = temp.getRight();
 			}
+			BinaryNode<E> tempNode = null;
+			if (temp.hasLeft()) {
+				tempNode = temp.getLeft();
+			}
 			start.setValue(temp.getValue());
-			temp.getParent().setRight(null);
+			if (temp.isLeft()) {
+				temp.getParent().setLeft(tempNode);
+			} else {
+				temp.getParent().setRight(tempNode);
+			}
 			return true;
 		}
 
@@ -128,8 +138,17 @@ public class MyBST<E extends Comparable<E>> {
 		while (temp.hasLeft()) {
 			temp = temp.getLeft();
 		}
+		BinaryNode<E> tempNode = null;
+		if (temp.hasRight()) {
+			tempNode = temp.getRight();
+		}
 		start.setValue(temp.getValue());
-		temp.getParent().setLeft(null);
+		if (temp.isLeft()) {
+			temp.getParent().setLeft(tempNode);
+		} else {
+			temp.getParent().setRight(tempNode);
+		}
+
 		return true;
 	}
 
