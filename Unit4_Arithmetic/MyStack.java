@@ -1,6 +1,6 @@
-public class MyStack<E> {
+public class MyStack<Object> {
 
-    private ListNode<E> head;
+    private ListNode head;
 
     
     public boolean pop() {
@@ -11,17 +11,21 @@ public class MyStack<E> {
         return true;
     }
 
-    public boolean add(ListNode<E> node) {
+    public boolean push(ListNode node) {
         if (empty()) {
             head = node;
             return true;
         }
-        head.setNext(node);
+        node.setNext(head);
+        head = node;
         return true;
     }
 
-    public E peek() {
-        return head.getValue();
+    public Object peek() {
+        if (empty()) {
+            return null;
+        }
+        return (Object) head.getValue();
     }
 
     public boolean empty() {

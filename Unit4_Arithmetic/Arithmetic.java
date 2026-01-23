@@ -33,8 +33,56 @@ public class Arithmetic {
 	// Evaluates a String exp that has an arithmetic expression written in STOUT notation
 	public static int evaluateStout(String exp) {
 		String[] strings = exp.split(" ");
-
-		return 0;
+		MyStack<String> stack = new MyStack<String>();
+		int num = 0;
+		for (int i = 0; i < strings.length; i++) {
+			if (toInt(strings[i]) == 0) {
+				stack.push(new ListNode(strings[i]));
+			} else if (strings[i].equals("+")) {
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				stack.push(new ListNode("" + num));
+				num = 0;
+			} else if (strings[i].equals("-")) {
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				num = Integer.parseInt(stack.peek()) - num;
+				stack.pop();
+				stack.push(new ListNode("" + num));
+				num = 0;
+			} else if (strings[i].equals("*")) {
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				num *= Integer.parseInt(stack.peek());
+				stack.pop();
+				stack.push(new ListNode("" + num));
+				num = 0;
+			} else if (strings[i].equals("/")) {
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				num = Integer.parseInt(stack.peek()) / num;
+				stack.pop();
+				stack.push(new ListNode("" + num));
+				num = 0;
+			} else if (strings[i].equals("%")) {
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				num = Integer.parseInt(stack.peek()) % num;
+				stack.pop();
+				stack.push(new ListNode("" + num));
+				num = 0;
+			} else if (strings[i].equals("^")) {
+				num += Integer.parseInt(stack.peek());
+				stack.pop();
+				num = (int) Math.pow(Integer.parseInt(stack.peek()), num);
+				stack.pop();
+				stack.push(new ListNode("" + num));
+				num = 0;
+			}
+		}
+		return Integer.parseInt(stack.peek());
 	}
 
 	public static String convertClassicToStout(String exp) {
@@ -42,14 +90,15 @@ public class Arithmetic {
 		MyStack<String> stack = new MyStack<String>();
 		String ret = "";
 		int index = 0;
-		ret += (strings[index] + " ");
-		index++;
+		if (!strings[index].equals("(")) {
+			ret += (strings[index] + " ");
+			index++;
+		}
 		while (index < strings.length) {
 			if (strings[index].equals("(")) {
-				stack.add(new ListNode<String>("("));
+				stack.push(new ListNode("("));
 
 			} else if (strings[index].equals(")")) {
-				stack.pop();
 				while (!stack.peek().equals("(")) {
 					ret += stack.peek() + " ";
 					stack.pop();
@@ -61,19 +110,24 @@ public class Arithmetic {
 
 			} else {
 				if (stack.empty()) {
-					stack.add(new ListNode<String>(strings[index]));
+					stack.push(new ListNode(strings[index]));
 				} else {
-					if (toInt(strings[index]) > toInt(stack.peek())) {
-						stack.add(new ListNode<String>(strings[index]));
-					} else {
-						ret += stack.peek() + " ";
-						stack.pop();
-						stack.add(new ListNode<String>(strings[index]));
+					if (!stack.peek().equals("(")) {
+						if (toInt(strings[index]) <= toInt(stack.peek())) {
+							ret += stack.peek() + " ";
+							stack.pop();
+						}
 					}
+					stack.push(new ListNode(strings[index]));
 				}
+
+
 			}
 			index++;
-
+		}
+		while (!stack.empty()) {
+			ret += stack.peek() + " ";
+			stack.pop();
 		}
 		return ret.substring(0, ret.length() - 1);
 	}
