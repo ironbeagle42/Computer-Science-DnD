@@ -67,23 +67,18 @@ public class CookieMonster {
 		if (!validPoint(row, col)) {
 			return -1;
 		}
-		int numCookies = 0;
+		int down = 0;
+		int right = 0;
 		if (row != cookieGrid.length - 1) {
-			numCookies = recursiveCookies(row + 1, col) + cookieGrid[row][col];
-			if (numCookies < cookieGrid[row][col]) {
-				numCookies = -1;
-			}
+			down = recursiveCookies(row + 1, col);
 		}
 		if (col != cookieGrid[0].length - 1) {
-			if (recursiveCookies(row, col + 1) > numCookies) {
-				numCookies = recursiveCookies(row, col + 1) + cookieGrid[row][col];
-			}
-			if (numCookies < cookieGrid[row][col]) {
-				return -1;
-			}
+			right = recursiveCookies(row, col + 1);
 		}
-
-		return numCookies;
+		if (down > right) {
+			return down + cookieGrid[row][col];
+		}
+		return right + cookieGrid[row][col];
 	}
 
 
