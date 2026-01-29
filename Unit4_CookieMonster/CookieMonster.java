@@ -88,8 +88,31 @@ public class CookieMonster {
 	 */
 	/* From any given position, always add the path right before adding the path down */
 	public int queueCookies() {
-		// CODE THIS
-		return 0;
+		ArrayDeque<OrphanScout> queue = new ArrayDeque<OrphanScout>();
+		OrphanScout orphan = new OrphanScout(0, 0, 0);
+		queue.add(orphan);
+		int maxCookies = 0;
+		int numCookies = 0;
+		int row = 0;
+		int col = 0;
+		while (!queue.isEmpty()) {
+			orphan = queue.poll();
+			row = orphan.getEndingRow();
+			col = orphan.getEndingCol();
+			if (cookieGrid[row][col] != -1) {
+				numCookies = orphan.getCookiesDiscovered() + cookieGrid[row][col];
+				if (col != cookieGrid[0].length - 1) {
+					queue.add(new OrphanScout(row, col + 1, numCookies));
+				}
+				if (row != cookieGrid.length - 1) {
+					queue.add(new OrphanScout(row + 1, col, numCookies));
+				}
+				if (numCookies > maxCookies && row == cookieGrid.length - 1 && col == cookieGrid[0].length - 1) {
+					maxCookies = numCookies;
+				}
+			}
+		}
+		return maxCookies;
 	}
 
 
@@ -99,8 +122,31 @@ public class CookieMonster {
 	 */
 	/* From any given position, always add the path right before adding the path down */
 	public int stackCookies() {
-		// CODE THIS
-		return 0;
+		Stack<OrphanScout> stack = new Stack<OrphanScout>();
+		OrphanScout orphan = new OrphanScout(0, 0, 0);
+		stack.push(orphan);
+		int maxCookies = 0;
+		int numCookies = 0;
+		int row = 0;
+		int col = 0;
+		while (!stack.empty()) {
+			orphan = stack.pop();
+			row = orphan.getEndingRow();
+			col = orphan.getEndingCol();
+			if (cookieGrid[row][col] != -1) {
+				numCookies = orphan.getCookiesDiscovered() + cookieGrid[row][col];
+				if (row != cookieGrid.length - 1) {
+					stack.push(new OrphanScout(row + 1, col, numCookies));
+				}
+				if (col != cookieGrid[0].length - 1) {
+					stack.push(new OrphanScout(row, col + 1, numCookies));
+				}
+				if (numCookies > maxCookies && row == cookieGrid.length - 1 && col == cookieGrid[0].length - 1) {
+					maxCookies = numCookies;
+				}
+			}
+		}
+		return maxCookies;
 	}
 
 }
