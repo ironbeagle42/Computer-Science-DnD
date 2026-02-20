@@ -1,8 +1,7 @@
 import java.io.*;
 import java.util.*;
 import java.util.Stack;
-import com.apple.laf.resources.aqua_zh_CN;
-import java.util.Queue;
+import java.util.ArrayDeque;
 
 // You are allowed (and expected!) to use either Java's ArrayDeque or LinkedList class to make
 // stacks and queues
@@ -107,8 +106,12 @@ public class CookieMonster {
 				if (row != cookieGrid.length - 1) {
 					queue.add(new OrphanScout(row + 1, col, numCookies));
 				}
-				if (numCookies > maxCookies && row == cookieGrid.length - 1 && col == cookieGrid[0].length - 1) {
+				if (numCookies > maxCookies) {
 					maxCookies = numCookies;
+				}
+			} else {
+				if (row == 0 && col == 0) {
+					return -1;
 				}
 			}
 		}
@@ -141,8 +144,12 @@ public class CookieMonster {
 				if (col != cookieGrid[0].length - 1) {
 					stack.push(new OrphanScout(row, col + 1, numCookies));
 				}
-				if (numCookies > maxCookies && row == cookieGrid.length - 1 && col == cookieGrid[0].length - 1) {
+				if (numCookies > maxCookies) {
 					maxCookies = numCookies;
+				}
+			} else {
+				if (row == 0 && col == 0) {
+					return -1;
 				}
 			}
 		}
