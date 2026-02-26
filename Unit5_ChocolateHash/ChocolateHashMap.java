@@ -86,10 +86,10 @@ public class ChocolateHashMap<K, V> {
     // NOTE: Math.abs(Integer.MIN_VALUE) is still negative. Consider masking the sign bit.
     private int whichBucket(K key) {
         int num = key.hashCode();
+        num %= buckets.length;
         if (num < 0) {
             num *= -1;
         }
-        num %= buckets.length;
         return num;
     }
 
@@ -156,16 +156,11 @@ public class ChocolateHashMap<K, V> {
         }
         ChocolateEntry<K, V> chocEntry = new ChocolateEntry<K, V>(key, value);
         BatchNode<ChocolateEntry<K, V>> batchN = new BatchNode<ChocolateEntry<K, V>>(chocEntry);
-        batchN.setNext(buckets[whichBucket(key)]);
-        batchN.setPrevious(node);
-        node.setNext(batchN);
-        buckets[whichBucket(key)].setPrevious(batchN);
-
+        buckets[whichBucket(key)].insertBefore(batchN);
         objectCount++;
         if (currentLoadFactor() > loadFactorLimit) {
             rehash(buckets.length * 2);
         }
-
         return true;
     }
 
@@ -212,6 +207,7 @@ public class ChocolateHashMap<K, V> {
     public void rehash(int newBucketCount) {
         BatchNode<ChocolateEntry<K, V>>[] oldBuckets = buckets;
         buckets = (BatchNode<ChocolateEntry<K, V>>[]) new BatchNode[newBucketCount];
+        objectCount = 0;
         fillArrayWithSentinels(buckets);
         for (int i = 0; i < oldBuckets.length; i++) {
             BatchNode<ChocolateEntry<K, V>> node = oldBuckets[i];
