@@ -9,7 +9,7 @@ public class MarkovPredictor {
     private HashMap<String, ArrayList<String>> map = new HashMap<>();
 
     //
-    public ArrayList<String[]> readData(String filePath) {
+    public void readData(String filePath) {
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -32,8 +32,9 @@ public class MarkovPredictor {
 
     // Method to predict the next state given a current state
     public String predictNextState(String currentState) {
-        
-
+        ArrayList<String> nextStates = map.get(currentState);
+        int num = (int)(Math.random() * nextStates.size());
+        return nextStates.get(num);
     }
 
 }
