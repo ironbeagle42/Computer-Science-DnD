@@ -11,8 +11,8 @@ public class RLETester {
         //     e.printStackTrace();
         // }
         try {
-            RLECompression.bwTransform("file.txt");
-            RLECompression.invertBWTransform("file.txt.bw");
+            RLECompression.compress("file.txt");
+            RLECompression.invertBWTransform("file.txt.bw.rle");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
