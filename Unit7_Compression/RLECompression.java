@@ -113,36 +113,41 @@ public class RLECompression {
     public static void invertBWTransform(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
-        StringBuilder originalText = new StringBuilder();
+        String originalText = "";
 
         while (br.ready()) {
             char c = (char) br.read();
-            originalText.append(c);
+            originalText += "" + c;
         }
         br.close();
 
-        StringBuilder[] reconstructions = new StringBuilder[originalText.length()];
+        String[] reconstructions = new String[originalText.length()];
         for (int i = 0; i < reconstructions.length; i++) {
-            reconstructions[i] = new StringBuilder("" + originalText.charAt(i));
+            reconstructions[i] = "" + originalText.charAt(i);
         }
         ArrayList<String> firstArr = new ArrayList<String>();
-        for (StringBuilder j : reconstructions) {
+        ArrayList<String> nextArr = new ArrayList<String>();
+        for (String j : reconstructions) {
             firstArr.add(j.toString());
+            nextArr.add(j.toString());
         }
-        ArrayList<String> finalArr = firstArr;
-        finalArr.sort(null);
-        for (int a = 0; a < firstArr.size(); a++) {
+        nextArr.sort(null);
+        for (int a = 0; a < firstArr.size() - 1; a++) {
             for (int b = 0; b < firstArr.size(); b++) {
-                finalArr.set(b, firstArr.get(b) + finalArr.get(b));
+                nextArr.set(b, firstArr.get(b) + nextArr.get(b));
             }
-            finalArr.sort(null);
+            if (nextArr.get(0).length() <= originalText.length() + 1) {
+                nextArr.sort(null);
+            }
         }
+        String ret = nextArr.get(nextArr.size() - 1);
+        ret = ret.substring(1);
 
 
         // TO-DO
         // And write the appropriate reconstruction into the file, without the null char
         PrintWriter pw = new PrintWriter(fileName.substring(0, fileName.length() - 3));
-        pw.write(finalArr.get(0));
+        pw.write(ret);
         pw.close();
     }
 }
