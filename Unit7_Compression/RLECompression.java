@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RLECompression {
@@ -78,7 +79,7 @@ public class RLECompression {
 
         // Add a null character at the beginning, as a
         // "beginning of file" character
-        StringBuilder originalText = new StringBuilder("" + '\0');
+        StringBuilder originalText = new StringBuilder("" + '~');
 
         while (br.ready()) {
             char c = (char) br.read();
@@ -88,11 +89,24 @@ public class RLECompression {
 
         String[] rotations = new String[originalText.length()];
         rotations[0] = originalText.toString();
-        // TO-DO
-        // Now do the Burrows-Wheeler Transform
-
-        // And then write the transformation into a file
+        String newStr = "";
+        String tempStr = "";
+        for (int i = 1; i < originalText.toString().length(); i++) {
+            tempStr = rotations[i - 1];
+            newStr = tempStr.substring(tempStr.length() - 1);
+            newStr += tempStr.substring(0, tempStr.length() - 1);
+            rotations[i] = newStr;
+        }
         PrintWriter pw = new PrintWriter(fileName + ".bw");
+        ArrayList<String> firstArr = new ArrayList<String>();
+        for (String j : rotations) {
+            firstArr.add(j);
+        }
+        firstArr.sort(null);
+        for (int i = 0; i < rotations.length; i++) {
+            pw.write(firstArr.get(i).substring(firstArr.get(i).length() - 1));
+        }
+        // And then write the transformation into a file
         pw.close();
     }
 
@@ -111,12 +125,24 @@ public class RLECompression {
         for (int i = 0; i < reconstructions.length; i++) {
             reconstructions[i] = new StringBuilder("" + originalText.charAt(i));
         }
-        // TO-DO
-        // Now undo the Burrows-Wheeler transform
+        ArrayList<String> firstArr = new ArrayList<String>();
+        for (StringBuilder j : reconstructions) {
+            firstArr.add(j.toString());
+        }
+        ArrayList<String> finalArr = firstArr;
+        finalArr.sort(null);
+        for (int a = 0; a < firstArr.size(); a++) {
+            for (int b = 0; b < firstArr.size(); b++) {
+                finalArr.set(b, firstArr.get(b) + finalArr.get(b));
+            }
+            finalArr.sort(null);
+        }
+
 
         // TO-DO
         // And write the appropriate reconstruction into the file, without the null char
         PrintWriter pw = new PrintWriter(fileName.substring(0, fileName.length() - 3));
+        pw.write(finalArr.get(0));
         pw.close();
     }
 }
