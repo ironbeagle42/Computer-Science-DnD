@@ -76,7 +76,6 @@ public class RLECompression {
 
     public static void bwTransform(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
-
         // Add a null character at the beginning, as a
         // "beginning of file" character
         StringBuilder originalText = new StringBuilder("" + '~');
