@@ -2,18 +2,25 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Huffman {
 
     public static void encodeFile(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         PrintWriter pw = new PrintWriter(fileName + ".huff");
-        
+        HashMap<Character, Integer> hash = new HashMap();
         while (br.ready()) {
             char c = (char) br.read();
             // pw.write(intToBinary(c));
-
+            if (hash.containsKey(c)) {
+                hash.put(c, hash.get(c) + 1);
+            } else {
+                hash.put(c, 1);
+            }
         }
+        ArrayList<ListNode> list = new ArrayList<>();
     }
 
     public static String intToBinary(int num) {
