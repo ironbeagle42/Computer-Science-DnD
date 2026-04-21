@@ -1,33 +1,39 @@
 
-public class BinaryNode<E extends Comparable<E>> {
+public class BinaryNode<Character, Integer> {
 
-	private E value;
-	private BinaryNode<E> left;
-	private BinaryNode<E> right;
-	private BinaryNode<E> parent;
+	private Character value;
+	private Integer freq;
+	private BinaryNode<Character, Integer> left;
+	private BinaryNode<Character, Integer> right;
+	private BinaryNode<Character, Integer> parent;
 	private int height;
 	
-	public BinaryNode(E value) {
-		this.value = value;
+	public BinaryNode(Character str, Integer num) {
+		this.value = str;
+		this.freq = num;
 		this.left = null;
 		this.right = null;
 		this.parent = null;
 		this.height = 0;
 	}
 	
-	public E getValue() {
+	public Character getValue() {
 		return value;
 	}
 
-	public BinaryNode<E> getLeft() {
+	public Integer getFreq() {
+		return freq;
+	}
+
+	public BinaryNode<Character, Integer> getLeft() {
 		return left;
 	}
 
-	public BinaryNode<E> getRight() {
+	public BinaryNode<Character, Integer> getRight() {
 		return right;
 	}
 
-	public BinaryNode<E> getParent() {
+	public BinaryNode<Character, Integer> getParent() {
 		return parent;
 	}
 
@@ -35,11 +41,15 @@ public class BinaryNode<E extends Comparable<E>> {
 		return height;
 	}
 	
-	public void setValue(E value) {
+	public void setValue(Character value) {
 		this.value = value;
 	}
 
-	public void setLeft(BinaryNode<E> left) {
+	public void setFreq(Integer num) {
+		this.freq = num;
+	}
+
+	public void setLeft(BinaryNode<Character, Integer> left) {
 		if (left == null) {
 			this.left = null;
 			return;
@@ -49,7 +59,7 @@ public class BinaryNode<E extends Comparable<E>> {
 		this.left.setHeight(height + 1);
 	}
 
-	public void setRight(BinaryNode<E> right) {
+	public void setRight(BinaryNode<Character, Integer> right) {
 		if (right == null) {
 			this.right = null;
 			return;
@@ -59,7 +69,7 @@ public class BinaryNode<E extends Comparable<E>> {
 		this.right.setHeight(height + 1);
 	}
 
-	public void setParent(BinaryNode<E> parent) {
+	public void setParent(BinaryNode<Character, Integer> parent) {
 		this.parent = parent;
 	}
 	

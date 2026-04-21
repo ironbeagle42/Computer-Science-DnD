@@ -10,7 +10,7 @@ public class Huffman {
     public static void encodeFile(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         PrintWriter pw = new PrintWriter(fileName + ".huff");
-        HashMap<Character, Integer> hash = new HashMap();
+        HashMap<Character, Integer> hash = new HashMap<Character, Integer>();
         while (br.ready()) {
             char c = (char) br.read();
             // pw.write(intToBinary(c));
@@ -20,7 +20,38 @@ public class Huffman {
                 hash.put(c, 1);
             }
         }
-        ArrayList<ListNode> list = new ArrayList<>();
+        ArrayList<Character> keys = new ArrayList<Character>(hash.keySet());
+        ArrayList<BinaryNode<Character, Integer>> list = new ArrayList<>();
+        for (int i = 0; i < keys.size(); i++) {
+            list.add(new BinaryNode<Character, Integer>(keys.get(i), hash.get(keys.get(i))));
+        }
+        list = sortArray(list);
+        
+    }
+
+    public static ArrayList<BinaryNode<Character, Integer>> sortArray(
+            ArrayList<BinaryNode<Character, Integer>> list) {
+        ArrayList<BinaryNode<Character, Integer>> newArr = new ArrayList<>();
+        int num = 0;
+        int listSize = list.size();
+        while (newArr.size() != (listSize)) {
+            num = 0;
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getFreq() > num) {
+                    num = list.get(i).getFreq();
+                }
+            }
+            for (int j = 0; j < list.size(); j++) {
+                int a = list.get(j).getFreq();
+                if (a == num) {
+                    newArr.add(new BinaryNode<Character, Integer>(list.get(j).getValue(), a));
+                    list.remove(j);
+                    j = list.size() + 10;
+                }
+            }
+        }
+        return newArr;
+
     }
 
     public static String intToBinary(int num) {
