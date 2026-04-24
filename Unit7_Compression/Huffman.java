@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ public class Huffman {
     public static void encodeFile(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         PrintWriter pw = new PrintWriter(fileName + ".huff");
+        PrintWriter dict = new PrintWriter(fileName + ".dict");
         HashMap<Character, Integer> hash = new HashMap<Character, Integer>();
         while (br.ready()) {
             char c = (char) br.read();
@@ -19,6 +22,7 @@ public class Huffman {
             } else {
                 hash.put(c, 1);
             }
+            hash.put((char) 3, 1);
         }
         ArrayList<Character> keys = new ArrayList<Character>(hash.keySet());
         ArrayList<BinaryNode<Character, Integer>> list = new ArrayList<>();
@@ -26,7 +30,44 @@ public class Huffman {
             list.add(new BinaryNode<Character, Integer>(keys.get(i), hash.get(keys.get(i))));
         }
         list = sortArray(list);
-        
+        while (list.size() >= 2) {
+            int num = list.get(list.size() - 2).getFreq() + list.get(list.size() - 1).getFreq();
+            BinaryNode<Character, Integer> newNode = new BinaryNode<>(null, num);
+            newNode.setLeft(list.get(list.size() - 2));
+            newNode.setRight(list.get(list.size() - 1));
+            list.removeLast();
+            list.removeLast();
+            for (int i = 0; i < list.size(); i++) {
+                if (newNode.getFreq() >= list.get(i).getFreq()) {
+                    list.add(i, newNode);
+                    i = list.size();
+                } else if (i == list.size()) {
+                    list.add(newNode);
+                }
+            }
+            if (list.size() == 0) {
+                list.add(newNode);
+            }
+        }
+        BinaryNode<Character, Integer> head = list.get(0);
+        dict.write(createDictionary(head));
+        dict.close();
+
+    }
+
+    public static String createDictionary(BinaryNode<Character, Integer> head) throws IOException {
+        String dictionary = "";
+        BinaryNode<Character, Integer> tempNode = null;
+        if (head.hasLeft()) {
+            dictionary += "0" + createDictionary(head.getLeft());
+        }
+        if (head.hasRight()) {
+            dictionary += "1" + createDictionary(head.getRight());
+        }
+        if (head.getValue() != null) {
+            dictionary += " " + head.getValue().toString() + "\n";
+        }
+        return dictionary;
     }
 
     public static ArrayList<BinaryNode<Character, Integer>> sortArray(
