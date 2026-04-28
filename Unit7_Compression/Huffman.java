@@ -50,24 +50,23 @@ public class Huffman {
             }
         }
         BinaryNode<Character, Integer> head = list.get(0);
-        dict.write(createDictionary(head));
+        dict.write(createDictionary(head, ""));
         dict.close();
 
     }
 
-    public static String createDictionary(BinaryNode<Character, Integer> head) throws IOException {
-        String dictionary = "";
-        BinaryNode<Character, Integer> tempNode = null;
+    public static String createDictionary(BinaryNode<Character, Integer> head, String binary) throws IOException {
+        String dict = "";
         if (head.hasLeft()) {
-            dictionary += "0" + createDictionary(head.getLeft());
+            dict += createDictionary(head.getLeft(), binary + "0");
         }
         if (head.hasRight()) {
-            dictionary += "1" + createDictionary(head.getRight());
+            dict += createDictionary(head.getRight(), binary + "1");
         }
         if (head.getValue() != null) {
-            dictionary += " " + head.getValue().toString() + "\n";
+            dict += " " + head.getValue().toString() + " " + binary + "\n";
         }
-        return dictionary;
+        return dict;
     }
 
     public static ArrayList<BinaryNode<Character, Integer>> sortArray(
