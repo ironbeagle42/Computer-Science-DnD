@@ -41,8 +41,9 @@ public class Huffman {
                 if (newNode.getFreq() >= list.get(i).getFreq()) {
                     list.add(i, newNode);
                     i = list.size();
-                } else if (i == list.size()) {
+                } else if (i == list.size() - 1) {
                     list.add(newNode);
+                    i = list.size();
                 }
             }
             if (list.size() == 0) {
@@ -52,10 +53,50 @@ public class Huffman {
         BinaryNode<Character, Integer> head = list.get(0);
         dict.write(createDictionary(head, ""));
         dict.close();
-
+        ArrayList<Character> str = new ArrayList<>();
+        BufferedReader brStr = new BufferedReader(new FileReader(fileName));
+        BufferedReader dictReader = new BufferedReader(new FileReader(fileName + ".dict"));
+        ArrayList<String> dictLines = new ArrayList<>();
+        while (dictReader.ready()) {
+            dictLines.add(dictReader.readLine());
+        }
+        while (brStr.ready()) {
+            str.add((char) brStr.read());
+        }
+        str.add((char) 3);
+        String binary = "";
+        for (int i = 0; i < str.size(); i++) {
+            char temp = str.get(i);
+            for (String j : dictLines) {
+                if (j.charAt(0) == (temp)) {
+                    binary += j.substring(2);
+                }
+            }
+        }
+        int num = 8 - binary.length() % 8;
+        for (int n = 0; n < num; n++) {
+            binary += "0";
+        }
+        String binaryToChars = "";;
+        while (binary.length() != 0) {
+            String eight = binary.substring(0, 8);
+            binary = binary.substring(8, binary.length());
+            binaryToChars += (char)Integer.parseInt(eight, 2);
+        }
+        pw.write(binaryToChars);
+        brStr.close();
+        dictReader.close();
+        pw.write("\n");
+        BufferedReader dictReader2 = new BufferedReader(new FileReader(fileName + ".dict"));
+        while (dictReader2.ready()) {
+            pw.write((char)dictReader2.read());
+        }
+        dictReader2.close();
+        pw.close();
     }
 
-    public static String createDictionary(BinaryNode<Character, Integer> head, String binary) throws IOException {
+    public static String createDictionary(BinaryNode<Character, Integer> head, String binary)
+            throws IOException {
         String dict = "";
         if (head.hasLeft()) {
             dict += createDictionary(head.getLeft(), binary + "0");
@@ -64,7 +105,8 @@ public class Huffman {
             dict += createDictionary(head.getRight(), binary + "1");
         }
         if (head.getValue() != null) {
-            dict += " " + head.getValue().toString() + " " + binary + "\n";
+            dict += head.getValue().toString() + " " + binary + "\n";
+            return dict;
         }
         return dict;
     }
@@ -114,6 +156,15 @@ public class Huffman {
             }
         }
         return ret;
+    }
 
+    public static void decodeFile(String fileName) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        PrintWriter pw = new PrintWriter(fileName + ".decoded");
+        String file = br.readLine();
+        ArrayList<String> dictionary = new ArrayList<>();
+        while (br.ready()) {
+            
+        }
     }
 }
