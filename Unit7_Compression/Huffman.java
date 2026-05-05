@@ -68,8 +68,10 @@ public class Huffman {
         for (int i = 0; i < str.size(); i++) {
             char temp = str.get(i);
             for (String j : dictLines) {
-                if (j.charAt(0) == (temp)) {
-                    binary += j.substring(2);
+                if (j.length() != 0) {
+                    if (j.charAt(0) == (temp)) {
+                        binary += j.substring(2);
+                    }
                 }
             }
         }
@@ -81,15 +83,16 @@ public class Huffman {
         while (binary.length() != 0) {
             String eight = binary.substring(0, 8);
             binary = binary.substring(8, binary.length());
-            binaryToChars += (char)Integer.parseInt(eight, 2);
+            binaryToChars += (char) Integer.parseInt(eight, 2);
         }
         pw.write(binaryToChars);
         brStr.close();
         dictReader.close();
         pw.write("\n");
+        pw.write("DICTIONARY BEGIN\n");
         BufferedReader dictReader2 = new BufferedReader(new FileReader(fileName + ".dict"));
         while (dictReader2.ready()) {
-            pw.write((char)dictReader2.read());
+            pw.write((char) dictReader2.read());
         }
         dictReader2.close();
         pw.close();
@@ -137,10 +140,10 @@ public class Huffman {
     }
 
     public static String intToBinary(int num) {
-        int times = num / 64;
+        int times = num / 128;
         String ret = "" + times;
-        num -= 64 * times;
-        for (int i = 32; i > 1; i /= 2) {
+        num -= 128 * times;
+        for (int i = 64; i > 1; i /= 2) {
             times = num / i;
             ret += "" + times;
             num -= i * times;
@@ -162,9 +165,47 @@ public class Huffman {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
         PrintWriter pw = new PrintWriter(fileName + ".decoded");
         String file = br.readLine();
-        ArrayList<String> dictionary = new ArrayList<>();
-        while (br.ready()) {
-            
+        String fileInBinary = "";
+        String tempNextLine = br.readLine();
+        int numCount = 0;
+        while (!tempNextLine.equals("DICTIONARY BEGIN")) {
+            numCount++;
+            file += "\n" + tempNextLine;
+            tempNextLine = br.readLine();
+            if (numCount > 10000) {
+                System.out.print(".");
+                numCount = 0;
+            }
         }
+        HashMap<String, Character> dictionary = new HashMap<String, Character>();
+        while (br.ready()) {
+            String tempString = (br.readLine());
+            if (!tempString.equals("")) {
+                String str1 = tempString.substring(2);
+                Character char1 = tempString.charAt(0);
+                dictionary.put(str1, char1);
+            }
+        }
+        for (int j = 0; j < file.length(); j++) {
+            fileInBinary += intToBinary((int) file.charAt(j));
+        }
+        String tempChars = "";
+        String decodedFile = "";
+        System.out.println(fileInBinary.length());
+        for (int i = 0; i < fileInBinary.length(); i++) {
+            tempChars += fileInBinary.charAt(i);
+            if (dictionary.containsKey(tempChars)) {
+                if ((int) dictionary.get(tempChars) == 3) {
+                    pw.write(decodedFile);
+                }
+                decodedFile += dictionary.get(tempChars);
+                tempChars = "";
+            }
+            // System.out.print(".");
+        }
+
+
+        br.close();
+        pw.close();
     }
 }
