@@ -1,0 +1,180 @@
+Skip to main contentAccessibility help
+Accessibility feedback
+how to turn char into string java
+
+Sign in
+AI Mode
+All
+Videos
+Forums
+Shopping
+Short videos
+Images
+More
+Tools
+AI Overview
+In Java, the most efficient and recommended way to convert a char to a String is by using the String.valueOf(char) method. 
+
+DigitalOcean
+ +1
+Primary Methods
+String.valueOf(char): This is the standard, high-performance way to perform the conversion.
+java
+char c = 'a';
+String s = String.valueOf(c);
+Use code with caution.
+Character.toString(char): This method internally calls String.valueOf(char), so it offers similar performance and results.
+java
+char c = 'a';
+String s = Character.toString(c);
+Use code with caution.
+ 
+
+DigitalOcean
+ +4
+Alternative Approaches
+String Concatenation: You can add a char to an empty string. While simple, it is generally slower than the methods above because it creates a StringBuilder internally.
+java
+char c = 'a';
+String s = "" + c;
+Use code with caution.
+String Constructor: You can pass a new character array containing just that one character to the String constructor.
+java
+char c = 'a';
+String s = new String(new char[]{c});
+Use code with caution.
+ 
+
+Stack Overflow
+ +4
+Converting a char[] Array to String
+If you have multiple characters in an array and want to turn the whole array into one string, use:
+new String(charArray): The most common way to convert an entire array.
+String.valueOf(charArray): Also returns a string containing all characters in the array. 
+
+Stack Overflow
+ +3
+java - How to convert a char to a String? - Stack Overflow
+Nov 17, 2011 — Comments. Add a comment. 18. This answer is not useful. Loading when this answer was accepted… Try this: Character.toString(aChar)
+
+
+Stack Overflow
+Convert char to String in Java - DigitalOcean
+Aug 3, 2022 — valueOf(char c) This is the most efficient method to convert char to string. You should always use this method and this is the rec...
+
+
+DigitalOcean
+How to convert a char array back to a string? - Stack Overflow
+Oct 4, 2011 — Comments. ... String output = new String(charArray); Where charArray is the character array and output is your character array con...
+
+
+Stack Overflow
+Show all
+Show more
+java - How to convert a char to a String?
+
+Stack Overflow
+10+ answers · 14 years ago
+I have a char and I need a String. How do I convert from one to the other?
+14 answers
+ 
+·
+ 
+Top answer: 
+You can use Character.toString(char). Note that this method simply returns a call to String.valueOf( ...
+Java: Converting a char to a string
+6 answers
+Dec 1, 2009
+How to convert a char array back to a string?
+14 answers
+Oct 4, 2011
+More results from stackoverflow.com
+Convert char to String in Java
+
+DigitalOcean
+https://www.digitalocean.com › community › tutorials
+Aug 3, 2022 — You can use String(char[] value) constructor to convert char array to string. This is the recommended way. String.valueOf(char[] data). String ...Read more
+How to Convert Char to String in Java?
+
+GeeksforGeeks
+https://www.geeksforgeeks.org › java › how-to-convert...
+Jul 23, 2025 — We can convert a char to a string object in Java by using the Character.toString() method of Character class. Below is the Java implementation ...Read more
+People also ask
+How to turn a char to string in Java?
+How do I change a char into a string?
+What is concat() in Java?
+How to use string charAt() in Java?
+[Java] Converting a Char to a String : r/learnprogramming
+
+Reddit · r/learnprogramming
+8 comments · 11 years ago
+Use the static Character.toString(char c) method or the static String.valueOf(char c) method.Read more
+Videos
+Java Program to Convert Character Array to String
+YouTube · Talented Developer
+Jan 8, 2024
+YouTube · Talented Developer
+
+2:38
+Convert a character array to a string using the string constructor, String.valueOf(), or StringBuilder.
+Java Program to Convert char to String with Explanation
+YouTube · Talented Developer
+Jan 20, 2021
+YouTube · Talented Developer
+
+2:28
+Java Program to Convert char array to String with Explanation
+YouTube · Talented Developer
+Jan 21, 2021
+YouTube · Talented Developer
+
+2:43
+View all
+Convert Char to String in Java
+
+Naukri.com
+https://www.naukri.com › Naukri Code 360 › Library
+Jul 7, 2025 — The String.valueOf(char) method can convert a char to a String in Java. This method returns a string representation of the char argument.Read more
+How to Convert Char and Char Arrays to Strings in Java
+
+centron GmbH
+https://www.centron.de › tutorial › how-to-convert-char...
+Feb 7, 2025 — The most efficient and commonly recommended way to convert a character to a string is by using the String.valueOf() method. This method is ...Read more
+Convert char to String in Java
+
+Baeldung
+https://www.baeldung.com › Java › Java String
+Aug 22, 2023 — The String class has a static method valueOf() that is designed for this particular use case. Here you can see it in action:Read more
+How to Convert char to String in Java? Example Tutorial
+
+Javarevisited
+https://javarevisited.blogspot.com › 2012/02 › how-to-co...
+Apr 9, 2025 — The Character class provides a convenient toString() method which takes a character and return its String equivalent. The toString() is static ...Read more
+How to Convert Characters to Strings in Java
+
+Udemy Blog
+https://blog.udemy.com › java-char-to-string
+... java functions to convert the character values into the a string. Functions valueOf() and toString() take a character argument and return the string.Read more
+People also search for
+How to turn char into string java eclipse
+How to convert char to string in C++
+Concatenate char to String Java
+Char to String
+Char to string arduino
+Convert char to string python
+How to convert char to int
+Character to String Swift
+1	
+2
+3
+4
+5
+6
+7
+8
+9
+10
+Next
+91604, Los Angeles, CA - From your IP address
+ - Update location
+HelpSend feedbackPrivacyTerms

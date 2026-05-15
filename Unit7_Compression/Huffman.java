@@ -4,15 +4,16 @@ import java.io.FileReader;
 import java.io.IO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 public class Huffman {
 
     public static void encodeFile(String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        PrintWriter pw = new PrintWriter(fileName + ".huff");
-        PrintWriter dict = new PrintWriter(fileName + ".dict");
+        BufferedReader br = new BufferedReader(new FileReader(fileName, StandardCharsets.UTF_8));
+        PrintWriter pw = new PrintWriter(fileName + ".huff", StandardCharsets.UTF_8);
+        PrintWriter dict = new PrintWriter(fileName + ".dict", StandardCharsets.UTF_8);
         HashMap<Character, Integer> hash = new HashMap<Character, Integer>();
         while (br.ready()) {
             char c = (char) br.read();
@@ -51,14 +52,27 @@ public class Huffman {
             }
         }
         BinaryNode<Character, Integer> head = list.get(0);
-        dict.write(createDictionary(head, ""));
+        String dictionaryString = createDictionary(head, "");
+        dict.write(dictionaryString.substring(0, dictionaryString.length() - 1));
         dict.close();
         ArrayList<Character> str = new ArrayList<>();
-        BufferedReader brStr = new BufferedReader(new FileReader(fileName));
-        BufferedReader dictReader = new BufferedReader(new FileReader(fileName + ".dict"));
-        ArrayList<String> dictLines = new ArrayList<>();
+        BufferedReader brStr = new BufferedReader(new FileReader(fileName, StandardCharsets.UTF_8));
+        BufferedReader dictReader =
+                new BufferedReader(new FileReader(fileName + ".dict", StandardCharsets.UTF_8));
+        HashMap<Integer, String> dictHash = new HashMap<Integer, String>();
+        String tempString = "";
         while (dictReader.ready()) {
-            dictLines.add(dictReader.readLine());
+            tempString = dictReader.readLine();
+            if (!tempString.equals("")) {
+                String[] strings = tempString.split(" ");
+                String str1 = strings[1];
+
+                Integer int1 = Integer.parseInt(strings[0]);
+                dictHash.put(int1, str1);
+            } else {
+                tempString = dictReader.readLine();
+                dictHash.put(10, tempString.substring(1));
+            }
         }
         while (brStr.ready()) {
             str.add((char) brStr.read());
@@ -67,12 +81,10 @@ public class Huffman {
         String binary = "";
         for (int i = 0; i < str.size(); i++) {
             char temp = str.get(i);
-            for (String j : dictLines) {
-                if (j.length() != 0) {
-                    if (j.charAt(0) == (temp)) {
-                        binary += j.substring(2);
-                    }
-                }
+            if (dictHash.get((int) temp) != null) {
+                binary += dictHash.get((int) temp);
+            } else {
+                int hello = 2;
             }
         }
         int num = 8 - binary.length() % 8;
@@ -81,20 +93,23 @@ public class Huffman {
         }
         String binaryToChars = "";;
         while (binary.length() != 0) {
+            if (binary.length() < 300) {
+                System.out.print(".");
+            }
             String eight = binary.substring(0, 8);
             binary = binary.substring(8, binary.length());
             binaryToChars += (char) Integer.parseInt(eight, 2);
         }
-        pw.write(binaryToChars);
         brStr.close();
         dictReader.close();
-        pw.write("\n");
-        pw.write("DICTIONARY BEGIN\n");
-        BufferedReader dictReader2 = new BufferedReader(new FileReader(fileName + ".dict"));
+        BufferedReader dictReader2 =
+                new BufferedReader(new FileReader(fileName + ".dict", StandardCharsets.UTF_8));
         while (dictReader2.ready()) {
             pw.write((char) dictReader2.read());
         }
         dictReader2.close();
+        pw.write("\nDICTEND\n");
+        pw.write(binaryToChars);
         pw.close();
     }
 
@@ -108,10 +123,10 @@ public class Huffman {
             dict += createDictionary(head.getRight(), binary + "1");
         }
         if (head.getValue() != null) {
-            dict += head.getValue().toString() + " " + binary + "\n";
+            dict += "" + ((int) head.getValue()) + " " + binary + "\n";
             return dict;
         }
-        return dict;
+        return dict.substring(0, dict.length());
     }
 
     public static ArrayList<BinaryNode<Character, Integer>> sortArray(
@@ -162,49 +177,59 @@ public class Huffman {
     }
 
     public static void decodeFile(String fileName) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-        PrintWriter pw = new PrintWriter(fileName + ".decoded");
-        String file = br.readLine();
+        BufferedReader br = new BufferedReader(new FileReader(fileName, StandardCharsets.UTF_8));
+        PrintWriter pw = new PrintWriter(fileName + ".decoded", StandardCharsets.UTF_8);
+        String file = "";
         String fileInBinary = "";
-        String tempNextLine = br.readLine();
-        int numCount = 0;
-        while (!tempNextLine.equals("DICTIONARY BEGIN")) {
-            numCount++;
-            file += "\n" + tempNextLine;
-            tempNextLine = br.readLine();
-            if (numCount > 10000) {
-                System.out.print(".");
-                numCount = 0;
+        HashMap<String, Integer> dictionary = new HashMap<String, Integer>();
+        String tempString = "";
+        while (!tempString.equals("DICTEND")) {
+            tempString = (br.readLine());
+            if (!tempString.equals("DICTEND")) {
+                if (!tempString.equals("")) {
+                    String[] strings = tempString.split(" ");
+                    String str1 = strings[1];
+                    Integer int1 = Integer.parseInt(strings[0]);
+                    dictionary.put(str1, int1);
+                } else {
+                    tempString = br.readLine();
+                    dictionary.put(tempString.substring(1), 10);
+                }
             }
         }
-        HashMap<String, Character> dictionary = new HashMap<String, Character>();
         while (br.ready()) {
-            String tempString = (br.readLine());
-            if (!tempString.equals("")) {
-                String str1 = tempString.substring(2);
-                Character char1 = tempString.charAt(0);
-                dictionary.put(str1, char1);
-            }
+            file += (char) br.read();
         }
         for (int j = 0; j < file.length(); j++) {
             fileInBinary += intToBinary((int) file.charAt(j));
         }
         String tempChars = "";
         String decodedFile = "";
-        System.out.println(fileInBinary.length());
+        // System.out.println(fileInBinary.length());
         for (int i = 0; i < fileInBinary.length(); i++) {
             tempChars += fileInBinary.charAt(i);
             if (dictionary.containsKey(tempChars)) {
-                if ((int) dictionary.get(tempChars) == 3) {
-                    pw.write(decodedFile);
+                if (dictionary.get(tempChars) == 3) {
+                    if (fileInBinary.length() - i <= 24) {
+                        // pw.write(decodedFile);
+                        i = fileInBinary.length();
+                    } else {
+                        decodedFile += (char) (int) dictionary.get(tempChars);
+                        tempChars = "";
+                    }
+                } else {
+                    decodedFile += (char) (int) dictionary.get(tempChars);
+                    tempChars = "";
                 }
-                decodedFile += dictionary.get(tempChars);
-                tempChars = "";
+
             }
             // System.out.print(".");
         }
+        if (decodedFile.endsWith(Character.toString(((char) 3)))) {
+            decodedFile = decodedFile.substring(0, decodedFile.length() - 1);
+        }
 
-
+        pw.write(decodedFile);
         br.close();
         pw.close();
     }
